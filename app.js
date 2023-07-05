@@ -1,35 +1,46 @@
 const express = require('express');
-const app = express();
-const { init } = require('./db/connect');
+const { sequelize, User } = require('./models');
 
-const PORT = 3000 || process.env.PORT;
+const app = express();
 
 app.use(express.json());
 
-// Database Connection
-init();
+app.post('/users', async (req, res) => {
+	const { name, email, role } = req.body;
 
-app.post('/user', (req, res) => {
-	res.send(req.body);
+	try {
+		const user = await User.create({ name, email, role });
+		return res.json(user);
+	} catch (e) {
+		console.log(e);
+		return res.status(500).json(err);
+	}
 });
 
-app.get('/user/:id', (req, res) => {
-	res.send({ id: req.params.id });
+app.get('/users', async (req, res) => {
+	try {
+		const users = await User.findAll();
+		return res.json(users);
+	} catch (err) {
+		console.log(err);
+		res.status(500).json(err);
+	}
 });
 
-app.get('/user', (req, res) => {
-	res.send({ id: req.query.id });
+app.get('/users/:uuid', async (req, res) => {
+	const uuid = req.params.uuid;
+
+	try {
+		const users = await User.findOne({ where: { uuid } });
+		return res.json(users);
+	} catch (err) {
+		console.log(err);
+		res.status(500).json(err);
+	}
 });
 
-app.listen(PORT, () => {
-	console.log(`App is running on port: ${PORT} `);
-});
-
-const { User } = require('./models/User');
-const { Org } = require('./models/Org');
-
-Org.hasMany(User, {
-	foreignKey: {
-		allowNull: true,
-	},
+app.listen({ port: 3000 }, async () => {
+	console.log('Server running on port 3000');
+	await sequelize.sync({ force: true });
+	console.log('Database Connected!');
 });
