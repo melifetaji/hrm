@@ -15,6 +15,9 @@ module.exports = (sequelize, DataTypes) => {
 			});
 			this.hasOne(models.salary, { foreignKey: 'eid' });
 			this.hasMany(models.leaves, { foreignKey: 'eid' });
+			this.belongsToMany(models.department, {
+				through: 'EmployeeDepartment',
+			});
 		}
 	}
 	employee.init(
@@ -36,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
 			age: { type: DataTypes.INTEGER, allowNull: false },
 			email: { type: DataTypes.STRING, allowNull: false, unique: true },
 			password: { type: DataTypes.STRING, allowNull: false },
-			did: { type: DataTypes.INTEGER, allowNull: false },
+			did: { type: DataTypes.INTEGER, allowNull: true },
 			position: { type: DataTypes.STRING },
 			role: { type: DataTypes.STRING },
 			ssn: { type: DataTypes.STRING },
