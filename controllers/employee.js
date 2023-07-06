@@ -2,6 +2,8 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const userRepository = require('../repositories/userRepository');
 
+const { registerSchema, updateSchema } = require('../validators/userValidator');
+
 exports.getUserById = async (req, res) => {
 	try {
 		const id = req.params.id;
@@ -19,10 +21,18 @@ exports.getUserById = async (req, res) => {
 exports.postCreateUser = async (req, res) => {
 	try {
 		const data = req.body;
-		const hashedPassword = await bcrypt.hash(data.password, 10);
-		data.password = hashedPassword;
 
-		await userRepository.createUser(data);
+		// Validation
+		const { error, value } = registerSchema.validate(data);
+
+		if (error) {
+			return res.status(400).json({ error: error.details[0].message });
+		}
+
+		const hashedPassword = await bcrypt.hash(value.password, 10);
+		value.password = hashedPassword;
+
+		await userRepository.createUser(value);
 		res.status(200).json({ message: 'User registered successfully.' });
 	} catch (err) {
 		res
@@ -45,6 +55,12 @@ exports.patchUpdateUser = async (req, res) => {
 	try {
 		const id = req.params.id;
 		const data = req.body;
+
+		const { error, value } = updateSchema.validate(data);
+
+		if (error) {
+			return res.status(400).json({ error: error.details[0].message });
+		}
 
 		await userRepository.updateUser(id, data);
 		res.status(200).json('User updated successfully!');
