@@ -1,8 +1,23 @@
 const express = require('express');
+const passport = require('passport');
+const session = require('express-session');
+
 const { sequelize, User } = require('./models');
 
+require('./strategies/local');
+
 const app = express();
+
 app.use(express.json());
+app.use(
+	session({
+		secret: 'melifetaji',
+		resave: false,
+		saveUninitialized: false,
+	})
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Routes
 const userRoutes = require('./routes/employee');

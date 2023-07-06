@@ -4,6 +4,14 @@ const userRepository = require('../repositories/userRepository');
 
 const { registerSchema, updateSchema } = require('../validators/userValidator');
 
+exports.postLogin = async (req, res) => {
+	try {
+		const { email, password } = req.body;
+	} catch (e) {
+		res.status(500).json('An error occurred while logging in');
+	}
+};
+
 exports.getUserById = async (req, res) => {
 	try {
 		const id = req.params.id;
@@ -28,8 +36,9 @@ exports.postCreateUser = async (req, res) => {
 		if (error) {
 			return res.status(400).json({ error: error.details[0].message });
 		}
+		const salt = await bcrypt.genSalt(10);
+		const hashedPassword = await bcrypt.hash(value.password, salt);
 
-		const hashedPassword = await bcrypt.hash(value.password, 10);
 		value.password = hashedPassword;
 
 		await userRepository.createUser(value);
