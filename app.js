@@ -8,12 +8,15 @@ require('./strategies/local');
 
 const app = express();
 
+const memoryStore = new session.MemoryStore();
+
 app.use(express.json());
 app.use(
 	session({
 		secret: 'melifetaji',
 		resave: false,
 		saveUninitialized: false,
+		store: memoryStore,
 	})
 );
 app.use(passport.initialize());

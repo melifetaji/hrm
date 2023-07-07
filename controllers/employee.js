@@ -1,6 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const userRepository = require('../repositories/userRepository');
+const passport = require('passport');
 
 const { registerSchema, updateSchema } = require('../validators/userValidator');
 
@@ -42,7 +43,12 @@ exports.postCreateUser = async (req, res) => {
 		value.password = hashedPassword;
 
 		await userRepository.createUser(value);
-		res.status(200).json({ message: 'User registered successfully.' });
+
+		passport.authenticate('local')(req, res, () => {
+			res
+				.status(200)
+				.json({ message: 'User registered and logged in successfully.' });
+		});
 	} catch (err) {
 		res
 			.status(500)

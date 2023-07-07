@@ -14,11 +14,6 @@ router.post('/login', passport.authenticate('local'), (req, res) => {
 router.delete('/:id', employeeControler.deleteUser);
 router.patch('/:id', employeeControler.patchUpdateUser);
 
-router.use((req, res, next) => {
-	console.log('current user = ', req.user.dataValues);
-	next();
-});
-
 router.get('/:id', employeeControler.getUserById);
 
 module.exports = router;
