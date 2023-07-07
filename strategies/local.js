@@ -25,24 +25,21 @@ passport.use(
 		},
 		async (email, password, done) => {
 			if (!email || !password) {
-				new Error('Something went wrong');
+				return done(null, false);
 			}
 			try {
 				const user = await userRepository.getUserByEmail(email);
 				if (!user) {
-					new Error('Something went wrong');
+					return done(null, false);
 				}
-				const isValid = await bcrypt.compare(
-					password,
-					user.dataValues.password
-				);
+				const isValid = await bcrypt.compare(password, user.password);
 				if (isValid) {
-					done(null, user.dataValues);
+					return done(null, user.dataValues);
 				} else {
-					done(null, false);
+					return done(null, false);
 				}
 			} catch (err) {
-				done(err, null);
+				return done(err, null);
 			}
 		}
 	)

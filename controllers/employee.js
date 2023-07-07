@@ -5,6 +5,15 @@ const passport = require('passport');
 
 const { registerSchema, updateSchema } = require('../validators/userValidator');
 
+exports.getLogout = (req, res, next) => {
+	req.logout(function (err) {
+		if (err) {
+			return next(err);
+		}
+		res.redirect('/');
+	});
+};
+
 exports.postLogout = (req, res) => {
 	req.logout(function (err) {
 		if (err) {
@@ -15,11 +24,8 @@ exports.postLogout = (req, res) => {
 };
 
 exports.postLogin = async (req, res) => {
-	try {
-		const { email, password } = req.body;
-	} catch (e) {
-		res.status(500).json('An error occurred while logging in');
-	}
+	console.log(req.body);
+	passport.authenticate('local');
 };
 
 exports.getUserById = async (req, res) => {
@@ -38,6 +44,7 @@ exports.getUserById = async (req, res) => {
 
 exports.postCreateUser = async (req, res) => {
 	try {
+		console.log('comes here');
 		const data = req.body;
 
 		// Validation
@@ -59,9 +66,7 @@ exports.postCreateUser = async (req, res) => {
 				.json({ message: 'User registered and logged in successfully.' });
 		});
 	} catch (err) {
-		res
-			.status(500)
-			.json({ error: 'An error occurred while registering the user.' });
+		res.status(500).json({ error: 'An error occurred while creating user' });
 	}
 };
 
@@ -82,8 +87,8 @@ exports.patchUpdateUser = async (req, res) => {
 	try {
 		const id = req.params.id;
 		const data = req.body;
-
-		if (req.user.dataValues.eid !== id) {
+		console.log(req.user);
+		if (req.user.eid !== id) {
 			return res.status(401).send('You can only update your own profile');
 		}
 
@@ -96,6 +101,6 @@ exports.patchUpdateUser = async (req, res) => {
 		await userRepository.updateUser(id, data);
 		res.status(200).json('User updated successfully!');
 	} catch (err) {
-		res.status(500).json('An error occurred while updating the user.');
+		res.status(500).json({ err });
 	}
 };
