@@ -1,7 +1,7 @@
 const express = require('express');
+require('dotenv').config();
 const passport = require('passport');
 const session = require('express-session');
-
 const { sequelize, User } = require('./models');
 
 require('./strategies/local');
@@ -13,7 +13,7 @@ const memoryStore = new session.MemoryStore();
 app.use(express.json());
 app.use(
 	session({
-		secret: 'melifetaji',
+		secret: process.env.SESSION_SECRET,
 		resave: false,
 		saveUninitialized: false,
 		store: memoryStore,

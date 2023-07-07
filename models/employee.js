@@ -40,7 +40,10 @@ module.exports = (sequelize, DataTypes) => {
 			email: { type: DataTypes.STRING, allowNull: false, unique: true },
 			password: { type: DataTypes.STRING, allowNull: false },
 			position: { type: DataTypes.STRING },
-			role: { type: DataTypes.STRING },
+			role: {
+				type: DataTypes.ENUM('admin', 'manager', 'basic'),
+				defaultValue: 'basic',
+			},
 			ssn: { type: DataTypes.STRING },
 		},
 		{

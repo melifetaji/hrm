@@ -11,7 +11,8 @@ passport.deserializeUser(async (id, done) => {
 	try {
 		const user = await userRepository.getUserById(id);
 		if (!user) throw new Error('User not found');
-		done(null, user);
+		delete user.dataValues.password;
+		done(null, user.dataValues);
 	} catch (err) {
 		done(err, null);
 	}

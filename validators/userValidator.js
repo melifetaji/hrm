@@ -18,7 +18,11 @@ const updateSchema = Joi.object({
 	gender: Joi.string().min(2).max(10),
 	age: Joi.number().min(1).max(120),
 	position: Joi.string().min(2).max(20),
-	role: Joi.string().min(2).max(20),
+	role: Joi.string()
+		.valid('admin', 'manager', 'basic')
+		.required()
+		.min(2)
+		.max(20),
 	ssn: Joi.number(),
 });
 
