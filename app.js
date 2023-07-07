@@ -26,6 +26,10 @@ app.use(passport.session());
 const userRoutes = require('./routes/employee');
 app.use('/users', userRoutes);
 
+app.get('/', (req, res) => {
+	res.send('home page');
+});
+
 // Start Server & Connect to DB!
 app.listen({ port: 3000 }, async () => {
 	console.log('Server running on port 3000');

@@ -5,6 +5,15 @@ const passport = require('passport');
 
 const { registerSchema, updateSchema } = require('../validators/userValidator');
 
+exports.postLogout = (req, res) => {
+	req.logout(function (err) {
+		if (err) {
+			return next(err);
+		}
+		res.redirect('/');
+	});
+};
+
 exports.postLogin = async (req, res) => {
 	try {
 		const { email, password } = req.body;
@@ -67,14 +76,21 @@ exports.deleteUser = async (req, res) => {
 };
 
 exports.patchUpdateUser = async (req, res) => {
+	if (!req.isAuthenticated()) {
+		return res.send('You are not authenticated');
+	}
 	try {
 		const id = req.params.id;
 		const data = req.body;
 
+		if (req.user.dataValues.eid !== id) {
+			return res.status(401).send('You can only update your own profile');
+		}
+
 		const { error, value } = updateSchema.validate(data);
 
 		if (error) {
-			return res.status(400).json({ error: error.details[0].message });
+			return res.status(403).json({ error: error.details[0].message });
 		}
 
 		await userRepository.updateUser(id, data);
