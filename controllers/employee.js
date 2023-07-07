@@ -1,6 +1,26 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const userRepository = require('../repositories/userRepository');
+const passport = require('passport');
+
+const { registerSchema, updateSchema } = require('../validators/userValidator');
+
+exports.postLogout = (req, res) => {
+	req.logout(function (err) {
+		if (err) {
+			return next(err);
+		}
+		res.redirect('/');
+	});
+};
+
+exports.postLogin = async (req, res) => {
+	try {
+		const { email, password } = req.body;
+	} catch (e) {
+		res.status(500).json('An error occurred while logging in');
+	}
+};
 
 exports.getUserById = async (req, res) => {
 	try {
@@ -19,11 +39,25 @@ exports.getUserById = async (req, res) => {
 exports.postCreateUser = async (req, res) => {
 	try {
 		const data = req.body;
-		const hashedPassword = await bcrypt.hash(data.password, 10);
-		data.password = hashedPassword;
 
-		await userRepository.createUser(data);
-		res.status(200).json({ message: 'User registered successfully.' });
+		// Validation
+		const { error, value } = registerSchema.validate(data);
+
+		if (error) {
+			return res.status(400).json({ error: error.details[0].message });
+		}
+		const salt = await bcrypt.genSalt(10);
+		const hashedPassword = await bcrypt.hash(value.password, salt);
+
+		value.password = hashedPassword;
+
+		await userRepository.createUser(value);
+
+		passport.authenticate('local')(req, res, () => {
+			res
+				.status(200)
+				.json({ message: 'User registered and logged in successfully.' });
+		});
 	} catch (err) {
 		res
 			.status(500)
@@ -42,9 +76,22 @@ exports.deleteUser = async (req, res) => {
 };
 
 exports.patchUpdateUser = async (req, res) => {
+	if (!req.isAuthenticated()) {
+		return res.send('You are not authenticated');
+	}
 	try {
 		const id = req.params.id;
 		const data = req.body;
+
+		if (req.user.dataValues.eid !== id) {
+			return res.status(401).send('You can only update your own profile');
+		}
+
+		const { error, value } = updateSchema.validate(data);
+
+		if (error) {
+			return res.status(403).json({ error: error.details[0].message });
+		}
 
 		await userRepository.updateUser(id, data);
 		res.status(200).json('User updated successfully!');
