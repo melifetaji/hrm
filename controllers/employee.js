@@ -27,6 +27,10 @@ exports.getLogout = (req, res, next) => {
 };
 
 exports.postLogin = async (req, res, next) => {
+	if (req.isAuthenticated()) {
+		res.status(200);
+	}
+
 	passport.authenticate('local', function (err, user, info) {
 		if (err) {
 			return next(err);
@@ -38,7 +42,7 @@ exports.postLogin = async (req, res, next) => {
 			if (err) {
 				return next(err);
 			}
-			return res.redirect('/');
+			return res.sendStatus(200);
 		});
 	})(req, res, next);
 };
