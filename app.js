@@ -33,6 +33,6 @@ app.get('/', (req, res) => {
 // Start Server & Connect to DB!
 app.listen({ port: 3000 }, async () => {
 	console.log('Server running on port 3000');
-	await sequelize.authenticate();
+	await sequelize.sync({ force: true });
 	console.log('Database Connected!');
 });
