@@ -5,21 +5,46 @@ const passport = require('passport');
 
 const { registerSchema, updateSchema } = require('../validators/userValidator');
 
-exports.postLogout = (req, res) => {
+exports.getProfile = (req, res) => {
+	try {
+		if (!req.isAuthenticated()) {
+			return res.status(403).json({ err: 'You need to log in' });
+		}
+		return res.status(200).json(req.user);
+	} catch (err) {
+		res.status(500).json({ err: "Couldn't fetch your profile" });
+	}
+};
+
+exports.getLogout = (req, res, next) => {
 	req.logout(function (err) {
 		if (err) {
 			return next(err);
 		}
+		res.clearCookie('connect.sid', { path: '/' });
 		res.redirect('/');
 	});
 };
 
-exports.postLogin = async (req, res) => {
-	try {
-		const { email, password } = req.body;
-	} catch (e) {
-		res.status(500).json('An error occurred while logging in');
+exports.postLogin = async (req, res, next) => {
+	if (req.isAuthenticated()) {
+		res.status(200);
 	}
+
+	passport.authenticate('local', function (err, user, info) {
+		if (err) {
+			return next(err);
+		}
+		if (!user) {
+			return res.status(403).json({ err: 'Not authorized' });
+		}
+		req.login(user, function (err) {
+			if (err) {
+				return next(err);
+			}
+			return res.sendStatus(200);
+		});
+	})(req, res, next);
 };
 
 exports.getUserById = async (req, res) => {
@@ -59,9 +84,7 @@ exports.postCreateUser = async (req, res) => {
 				.json({ message: 'User registered and logged in successfully.' });
 		});
 	} catch (err) {
-		res
-			.status(500)
-			.json({ error: 'An error occurred while registering the user.' });
+		res.status(500).json({ error: 'An error occurred while creating user' });
 	}
 };
 
@@ -82,8 +105,7 @@ exports.patchUpdateUser = async (req, res) => {
 	try {
 		const id = req.params.id;
 		const data = req.body;
-
-		if (req.user.dataValues.eid !== id) {
+		if (req.user.eid !== id) {
 			return res.status(401).send('You can only update your own profile');
 		}
 

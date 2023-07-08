@@ -1,5 +1,6 @@
 const express = require('express');
 require('dotenv').config();
+const bodyParser = require('body-parser');
 const passport = require('passport');
 const session = require('express-session');
 const { sequelize, User } = require('./models');
@@ -24,7 +25,9 @@ app.use(passport.session());
 
 // Routes
 const userRoutes = require('./routes/employee');
+const announcementRoutes = require('./routes/announcement');
 app.use('/users', userRoutes);
+app.use('/announcements', announcementRoutes);
 
 app.get('/', (req, res) => {
 	res.send('home page');
