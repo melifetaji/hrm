@@ -3,7 +3,11 @@ const bcrypt = require('bcrypt');
 const userRepository = require('../repositories/userRepository');
 const passport = require('passport');
 
-const { registerSchema, updateSchema } = require('../validators/userValidator');
+const {
+	registerSchema,
+	updateSchema,
+	passwordSchema,
+} = require('../validators/userValidator');
 
 exports.getProfile = (req, res) => {
 	try {
@@ -119,5 +123,33 @@ exports.patchUpdateUser = async (req, res) => {
 		res.status(200).json('User updated successfully!');
 	} catch (err) {
 		res.status(500).json('An error occurred while updating the user.');
+	}
+};
+
+exports.patchPassword = async (req, res) => {
+	console.log('comes here');
+	if (!req.isAuthenticated()) {
+		return res.send('You are not authenticated');
+	}
+	const data = req.body;
+	const { error, value } = passwordSchema.validate(data);
+
+	console.log(data);
+	if (error) {
+		return res.status(403).json({ error: error.details[0].message });
+	}
+
+	if (data.password !== data.confirm) {
+		return res.status(403).json({ error: 'Password confirmation incorrect' });
+	}
+
+	const salt = await bcrypt.genSalt(10);
+	const password = await bcrypt.hash(data.password, salt);
+
+	try {
+		await userRepository.updateUser(req.user.eid, { password: password });
+		return res.status(200).json('Password updated successfully');
+	} catch (err) {
+		return res.status(500).json('An error occurred while changing password!');
 	}
 };

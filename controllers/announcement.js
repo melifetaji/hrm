@@ -72,9 +72,6 @@ exports.getById = async (req, res) => {
 };
 
 exports.patchUpdate = async (req, res) => {
-	if (!req.body) {
-		return res.status(400).json({ err: 'Invalid request' });
-	}
 	if (!req.isAuthenticated() || !req.user) {
 		return res.status(403).json({ err: 'Not authorized' });
 	}

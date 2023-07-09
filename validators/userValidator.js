@@ -22,4 +22,9 @@ const updateSchema = Joi.object({
 	ssn: Joi.number(),
 });
 
-module.exports = { registerSchema, updateSchema };
+const passwordSchema = Joi.object({
+	password: Joi.string().min(8).max(30).required(),
+	confirm: Joi.string().min(8).max(30).required(),
+});
+
+module.exports = { registerSchema, updateSchema, passwordSchema };
