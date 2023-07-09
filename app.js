@@ -45,12 +45,14 @@ app.use(passport.session());
 const userRoutes = require('./routes/employee');
 const announcementRoutes = require('./routes/announcement');
 const openingRoutes = require('./routes/openings');
+const applicantRoutes = require('./routes/applicant');
 
+app.use('/apply', applicantRoutes);
 app.use('/users', userRoutes);
 app.use('/announcements', announcementRoutes);
 app.use('/openings', openingRoutes);
 
-// Start Server & Connect to DB!
+// Start Server & Connect to DB!z
 app.listen({ port: 3000 }, async () => {
 	console.log('Server running on port 3000');
 	// await sequelize.sync({ force: true });
