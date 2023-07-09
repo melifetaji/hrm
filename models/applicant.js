@@ -9,18 +9,21 @@ module.exports = (sequelize, DataTypes) => {
 		 */
 		static associate(models) {
 			this.belongsToMany(models.opening, {
-				through: 'ApplicantsOpenings',
-				as: 'applicant',
-				foreignKey: 'aid',
+				through: 'applicantOpening',
 			});
 		}
 	}
 	applicant.init(
 		{
-			aid: { type: DataTypes.INTEGER, primaryKey: true },
+			id: {
+				type: DataTypes.UUID,
+				defaultValue: DataTypes.UUIDV4,
+				primaryKey: true,
+			},
 			fname: { type: DataTypes.STRING, allowNull: false },
 			lname: { type: DataTypes.STRING, allowNull: false },
 			age: DataTypes.INTEGER,
+			email: { type: DataTypes.STRING, allowNull: false },
 			experience: DataTypes.INTEGER,
 			message: DataTypes.STRING,
 			cv: { type: DataTypes.STRING, allowNull: false },

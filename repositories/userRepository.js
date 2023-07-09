@@ -1,8 +1,8 @@
 const Employee = require('../models').employee;
 
 class userRepository {
-	async getUserById(userId) {
-		return Employee.findByPk(userId);
+	async getUserById(id) {
+		return Employee.findByPk(id);
 	}
 
 	async getUserByEmail(email) {
@@ -13,12 +13,12 @@ class userRepository {
 		return Employee.create(userData);
 	}
 
-	async updateUser(userId, updatedUserData) {
-		return Employee.update(updatedUserData, { where: { eid: userId } });
+	async updateUser(id, updatedUserData) {
+		return Employee.update(updatedUserData, { where: { eid: id } });
 	}
 
-	async deleteUser(userId) {
-		return Employee.destroy({ where: { eid: userId } });
+	async deleteUser(id) {
+		return Employee.destroy({ where: { eid: id } });
 	}
 }
 

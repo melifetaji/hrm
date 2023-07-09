@@ -4,7 +4,6 @@ const createSchema = Joi.object({
 	name: Joi.string().min(2).max(50).required(),
 	description: Joi.string().min(2).max(500).required(),
 	image: Joi.string(),
-	eid: Joi.string().required(),
 });
 
 const updateSchema = Joi.object({

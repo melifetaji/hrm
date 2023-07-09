@@ -5,6 +5,7 @@ const router = express.Router();
 
 const employeeController = require('../controllers/employee');
 
+router.patch('/change-password', employeeController.patchPassword);
 router.post('/register', employeeController.postCreateUser);
 router.get('/logout', employeeController.getLogout);
 router.post('/login', employeeController.postLogin);

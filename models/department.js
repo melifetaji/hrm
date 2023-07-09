@@ -9,7 +9,6 @@ module.exports = (sequelize, DataTypes) => {
 		 */
 		static associate(models) {
 			this.belongsToMany(models.project, { through: 'ProjectsDepartments' });
-			this.hasMany(models.opening, { foreignKey: 'did' });
 			this.belongsToMany(models.employee, {
 				through: 'DepartmentManager',
 			});

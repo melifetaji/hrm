@@ -1,35 +1,31 @@
 const express = require('express');
-const announcementRepository = require('../repositories/announcementRepository');
+const openingRepository = require('../repositories/openingRepository');
 const passport = require('passport');
 
 const {
 	createSchema,
 	updateSchema,
-} = require('../validators/announcementValidator');
+} = require('../validators/openingValidator');
 
 exports.postCreate = async (req, res) => {
-	if (!req.isAuthenticated() || !req.user) {
-		return res.status(403).json({ err: 'Not authorized' });
+	if (!req.isAuthenticated()) {
+		return res.status(403).json({ err: 'Not authenticated' });
 	}
-
-	if (req.user.role === 'basic') {
+	if (req.user.role == 'basic') {
 		return res.status(403).json({ err: 'No permissions' });
 	}
-
-	let announcement = req.body;
-	announcement.eid = req.user.eid;
-
-	const { error, value } = createSchema.validate(announcement);
+	const data = req.body;
+	const { error, value } = createSchema.validate(data);
 
 	if (error) {
 		return res.status(400).json({ error: error.details[0].message });
 	}
 
 	try {
-		await announcementRepository.createAnn(value);
-		res.status(200).json(value);
+		await openingRepository.create(value);
+		return res.status(200).json('Opening successfully created!');
 	} catch (err) {
-		res.status(500).json(err);
+		return res.status(500).json({ err });
 	}
 };
 
@@ -39,15 +35,13 @@ exports.getAll = async (req, res) => {
 	}
 
 	try {
-		const all = await announcementRepository.getAllAnn();
+		const all = await openingRepository.getAll();
 		if (!all) {
-			return res.status(404).json({ err: 'No announcements were found!' });
+			return res.status(404).json({ err: 'No openings were found!' });
 		}
 		res.status(200).json(all);
 	} catch (err) {
-		res
-			.status(500)
-			.json({ err: 'An error occurred while fetching announcements!' });
+		res.status(500).json({ err: 'An error occurred while fetching openings!' });
 	}
 };
 
@@ -56,18 +50,20 @@ exports.getById = async (req, res) => {
 		return res.status(403).json({ err: 'Not authorized' });
 	}
 
-	try {
-		const id = req.params.id;
+	const id = req.params.id;
 
-		const ann = await announcementRepository.getAnnById(id);
-		if (!ann) {
-			return res.status(404).json({ err: 'Announcement not found' });
+	try {
+		const opening = await openingRepository.getById(id);
+
+		if (opening) {
+			return res.status(200).json(opening);
 		}
-		return res.status(200).json(ann);
+
+		return res.status(404).json({ err: 'Opening not found' });
 	} catch (err) {
 		return res
 			.status(500)
-			.json({ err: 'An error occurred while fetching announcements!' });
+			.json({ err: 'An error occurred while fetching openings!' });
 	}
 };
 
@@ -76,7 +72,7 @@ exports.patchUpdate = async (req, res) => {
 		return res.status(403).json({ err: 'Not authorized' });
 	}
 	if (req.user.role == 'basic') {
-		return res.status(403).json({ err: 'Not authorized' });
+		return res.status(403).json({ err: 'No permissions' });
 	}
 
 	const id = req.params.id;
@@ -87,12 +83,12 @@ exports.patchUpdate = async (req, res) => {
 	}
 
 	try {
-		await announcementRepository.updateAnn(id, value);
-		return res.status(200).json('Successfully updated announcement');
+		await openingRepository.update(id, value);
+		return res.status(200).json('Successfully updated opening');
 	} catch (err) {
 		return res
 			.status(500)
-			.json({ err: 'An error occurred while updating announcement!' });
+			.json({ err: 'An error occurred while updating opening!' });
 	}
 };
 
@@ -107,11 +103,9 @@ exports.delete = async (req, res) => {
 	const id = req.params.id;
 
 	try {
-		await announcementRepository.deleteAnn(id);
-		res.status(200).json('Successfully deleted announcement');
+		await openingRepository.delete(id);
+		res.status(200).json('Successfully deleted opening');
 	} catch (err) {
-		res
-			.status(500)
-			.json({ err: 'An error occurred while deleting announcement!' });
+		res.status(500).json({ err: 'An error occurred while deleting opening!' });
 	}
 };
