@@ -14,11 +14,11 @@ class announcementRepository {
 	}
 
 	async updateAnn(id, updatedAnn) {
-		return Employee.update(updatedAnn, { where: { id: id } });
+		return Announcement.update(updatedAnn, { where: { id: id } });
 	}
 
 	async deleteAnn(id) {
-		return Employee.destroy({ where: { id: id } });
+		return Announcement.destroy({ where: { id: id } });
 	}
 }
 
