@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
 			fname: { type: DataTypes.STRING, allowNull: false },
 			lname: { type: DataTypes.STRING, allowNull: false },
 			age: DataTypes.INTEGER,
+			email: { type: DataTypes.STRING, allowNull: false, unique: true },
 			experience: DataTypes.INTEGER,
 			message: DataTypes.STRING,
 			cv: { type: DataTypes.STRING, allowNull: false },

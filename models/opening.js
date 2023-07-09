@@ -11,14 +11,17 @@ module.exports = (sequelize, DataTypes) => {
 			this.belongsToMany(models.applicant, {
 				through: 'ApplicantsOpenings',
 				as: 'opening',
-				foreignKey: 'oid',
+				foreignKey: 'id',
 			});
-			this.belongsTo(models.department, { foreignKey: 'did' });
 		}
 	}
 	opening.init(
 		{
-			oid: { type: DataTypes.INTEGER, primaryKey: true },
+			id: {
+				type: DataTypes.UUID,
+				defaultValue: DataTypes.UUIDV4,
+				primaryKey: true,
+			},
 			name: { type: DataTypes.STRING, allowNull: false },
 			description: { type: DataTypes.STRING, allowNull: false },
 		},

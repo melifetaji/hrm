@@ -25,10 +25,14 @@ exports.getLogout = (req, res, next) => {
 		if (err) {
 			return next(err);
 		}
-		res
-			.status(200)
-			.clearCookie('connect.sid', { path: '/' })
-			.json({ status: 'Success' });
+		req.session.destroy(function (err) {
+			if (!err) {
+				res
+					.status(200)
+					.clearCookie('connect.sid', { path: '/' })
+					.json({ status: 'Success' });
+			}
+		});
 	});
 };
 
