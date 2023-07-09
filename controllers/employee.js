@@ -25,8 +25,10 @@ exports.getLogout = (req, res, next) => {
 		if (err) {
 			return next(err);
 		}
-		res.clearCookie('connect.sid', { path: '/' });
-		res.redirect('/');
+		res
+			.status(200)
+			.clearCookie('connect.sid', { path: '/' })
+			.json({ status: 'Success' });
 	});
 };
 
@@ -127,14 +129,12 @@ exports.patchUpdateUser = async (req, res) => {
 };
 
 exports.patchPassword = async (req, res) => {
-	console.log('comes here');
 	if (!req.isAuthenticated()) {
 		return res.send('You are not authenticated');
 	}
 	const data = req.body;
 	const { error, value } = passwordSchema.validate(data);
 
-	console.log(data);
 	if (error) {
 		return res.status(403).json({ error: error.details[0].message });
 	}
