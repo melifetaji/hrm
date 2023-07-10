@@ -30,10 +30,6 @@ exports.postCreate = async (req, res) => {
 };
 
 exports.getAll = async (req, res) => {
-	if (!req.isAuthenticated() || !req.user) {
-		return res.status(403).json({ err: 'Not authorized' });
-	}
-
 	try {
 		const all = await openingRepository.getAll();
 		if (!all) {
@@ -46,10 +42,6 @@ exports.getAll = async (req, res) => {
 };
 
 exports.getById = async (req, res) => {
-	if (!req.isAuthenticated() || !req.user) {
-		return res.status(403).json({ err: 'Not authorized' });
-	}
-
 	const id = req.params.id;
 
 	try {

@@ -57,6 +57,7 @@ class ApplicantRepository {
 							where: { openingId: openingId },
 						},
 						attributes: [],
+						required: true,
 					},
 				],
 			});
