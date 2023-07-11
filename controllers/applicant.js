@@ -31,6 +31,10 @@ exports.postCreate = async (req, res) => {
 };
 
 exports.getApplicantsByOpenings = async (req, res) => {
+	if (!req.isAuthenticated() || !req.user) {
+		return res.status(403).json({ err: 'Not authorized' });
+	}
+
 	const openingId = req.query.id;
 	try {
 		const applicants = await ApplicantRepository.getApplicantsByOpening(
@@ -46,3 +50,34 @@ exports.getApplicantsByOpenings = async (req, res) => {
 			.json({ err: 'An error occurred while fetching applicants' });
 	}
 };
+
+exports.getApplicantById = async (req, res) => {
+	if (!req.isAuthenticated() || !req.user) {
+		return res.status(403).json({ err: 'Not authorized' });
+	}
+
+	const id = req.params.id;
+
+	try {
+		const applicant = await ApplicantRepository.getById(id);
+		if (!applicant) {
+			return res.status(404).json({ err: 'Applicant not found' });
+		}
+		return res.status(200).json(applicant);
+	} catch (err) {
+		return res.status(500).json(err);
+	}
+};
+
+exports.getApplicants = async (req, res) => {
+	if (!req.isAuthenticated() || !req.user) {
+		return res.status(403).json({ err: 'Not authorized' });
+	}
+	try {
+		const applicants = await ApplicantRepository.getAll();
+		res.status(200).json(applicants);
+	} catch (err) {
+		return res.status(500).json(err);
+	}
+};
+// get by id

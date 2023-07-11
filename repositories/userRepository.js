@@ -1,25 +1,53 @@
 const Employee = require('../models').employee;
 
-class userRepository {
+class UserRepository {
 	async getUserById(id) {
-		return Employee.findByPk(id);
+		try {
+			return await Employee.findByPk(id);
+		} catch (error) {
+			throw new Error('Failed to get user by ID: ' + error.message);
+		}
 	}
 
 	async getUserByEmail(email) {
-		return Employee.findOne({ where: { email } });
+		try {
+			return await Employee.findOne({ where: { email } });
+		} catch (error) {
+			throw new Error('Failed to get user by email: ' + error.message);
+		}
 	}
 
 	async createUser(userData) {
-		return Employee.create(userData);
+		try {
+			return await Employee.create(userData);
+		} catch (error) {
+			throw new Error('Failed to create user: ' + error.message);
+		}
 	}
 
 	async updateUser(id, updatedUserData) {
-		return Employee.update(updatedUserData, { where: { eid: id } });
+		try {
+			const result = await Employee.update(updatedUserData, {
+				where: { eid: id },
+			});
+			if (result[0] === 0) {
+				throw new Error('User not found.');
+			}
+		} catch (error) {
+			throw new Error('Failed to update user: ' + error.message);
+		}
 	}
 
 	async deleteUser(id) {
-		return Employee.destroy({ where: { eid: id } });
+		try {
+			const result = await Employee.destroy({ where: { eid: id } });
+			if (result === 0) {
+				throw new Error('User not found.');
+			}
+		} catch (error) {
+			throw new Error('Failed to delete user: ' + error.message);
+		}
 	}
 }
 
-module.exports = new userRepository();
+module.exports = new UserRepository();
