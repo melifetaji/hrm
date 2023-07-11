@@ -9,6 +9,27 @@ const {
 	passwordSchema,
 } = require('../validators/userValidator');
 
+exports.getUserByDepartment = async (req, res) => {
+	const did = req.query.did;
+	console.log(did);
+	try {
+		if (!req.isAuthenticated()) {
+			return res.status(403).json({ err: 'You need to log in' });
+		}
+		const users = await userRepository
+			.getUsersByDepartment(did)
+			.catch((e) => console.log(e));
+
+		if (!users) {
+			return res.status(404).json({ err: 'No users were found!' });
+		}
+
+		return res.status(200).json(users);
+	} catch (err) {
+		res.status(500).json({ err: "Couldn't fetch your profile" });
+	}
+};
+
 exports.getProfile = (req, res) => {
 	try {
 		if (!req.isAuthenticated()) {
