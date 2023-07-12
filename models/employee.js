@@ -9,13 +9,14 @@ module.exports = (sequelize, DataTypes) => {
 		 */
 		static associate(models) {
 			this.hasMany(models.announcements, { foreignKey: 'eid' });
-			this.hasMany(models.project, { foreignKey: 'manager' });
-			this.belongsToMany(models.department, {
-				through: 'DepartmentManager',
+			this.belongsTo(models.department, { foreignKey: 'did' });
+
+			this.belongsToMany(models.project, {
+				through: 'projectEmployee',
 			});
+
 			this.hasOne(models.salary, { foreignKey: 'eid' });
 			this.hasMany(models.leaves, { foreignKey: 'eid' });
-			this.belongsTo(models.department, { foreignKey: 'did' });
 		}
 	}
 	employee.init(

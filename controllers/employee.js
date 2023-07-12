@@ -11,22 +11,42 @@ const {
 
 exports.getUserByDepartment = async (req, res) => {
 	const did = req.query.did;
-	console.log(did);
 	try {
 		if (!req.isAuthenticated()) {
 			return res.status(403).json({ err: 'You need to log in' });
 		}
-		const users = await userRepository
-			.getUsersByDepartment(did)
-			.catch((e) => console.log(e));
+		const users = await userRepository.getUsersByDepartment(did);
 
-		if (!users) {
+		if (users.length === 0) {
 			return res.status(404).json({ err: 'No users were found!' });
 		}
 
 		return res.status(200).json(users);
 	} catch (err) {
-		res.status(500).json({ err: "Couldn't fetch your profile" });
+		res.status(500).json({ err: "Couldn't fetch employees" });
+	}
+};
+
+exports.getUsersByProject = async (req, res) => {
+	if (!req.isAuthenticated() || !req.user) {
+		return res.status(403).json({ err: 'Not authorized' });
+	}
+
+	const projectId = req.query.id;
+	console.log(projectId);
+	const users = await userRepository
+		.getUsersByProject(projectId)
+		.catch((e) => console.log(e));
+
+	try {
+		if (users.length === 0) {
+			return res.status(404).json({ err: 'No applicants were found' });
+		}
+		return res.status(200).json(users);
+	} catch (err) {
+		return res
+			.status(500)
+			.json({ err: 'An error occurred while finding users' });
 	}
 };
 
@@ -177,4 +197,25 @@ exports.patchPassword = async (req, res) => {
 	} catch (err) {
 		return res.status(500).json('An error occurred while changing password!');
 	}
+};
+
+exports.assignToProject = async (req, res) => {
+	if (!req.isAuthenticated()) {
+		return res.status(403).send('You are not authenticated');
+	}
+	if (req.user.role !== 'admin') {
+		return res.status(403).send('No permissions');
+	}
+	const { user, project } = req.body;
+	console.log(
+		'iasdhasdjuasdjuasdjiasdjidasjioasdjoiasdjiosdajioasjiosdodjiasdjidoasjjioasoasdjdoasjdoasjasdjidasjiasdojasdji',
+		user,
+		project
+	);
+	await userRepository
+		.assignToProject(user, project)
+		.then((result) => {
+			res.status(200).json(result);
+		})
+		.catch((e) => res.status(400).json(e));
 };
