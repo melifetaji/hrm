@@ -7,7 +7,33 @@ const {
 	registerSchema,
 	updateSchema,
 	passwordSchema,
+	updateSalary,
 } = require('../validators/userValidator');
+
+exports.patchUpdateSalary = async (req, res) => {
+	if (!req.isAuthenticated()) {
+		return res.status(403).json({ err: 'You need to log in' });
+	}
+	if (req.user.role !== 'admin') {
+		return res.status(403).send('No permissions');
+	}
+	const salaryData = req.body;
+
+	const { error, value } = updateSalary.validate(salaryData);
+
+	if (error) {
+		return res.status(403).json({ error: error.details[0].message });
+	}
+
+	try {
+		const updated = await userRepository.updateSalary(req.user.eid, value);
+		return res.status(200).json(updated);
+	} catch (err) {
+		return res
+			.status(500)
+			.json({ err: 'An error occured while updating salary' });
+	}
+};
 
 exports.getUserByDepartment = async (req, res) => {
 	const did = req.query.did;
@@ -50,7 +76,13 @@ exports.getUsersByProject = async (req, res) => {
 	}
 };
 
-exports.getProfile = (req, res) => {
+exports.getProfile = async (req, res) => {
+	console.log(req.query.salary);
+	if (req.query.salary == 'true') {
+		const profile = await userRepository.getWithSalary(req.user.eid);
+		return res.status(200).json(profile);
+	}
+
 	try {
 		if (!req.isAuthenticated()) {
 			return res.status(403).json({ err: 'You need to log in' });
@@ -115,7 +147,6 @@ exports.getUserById = async (req, res) => {
 exports.postCreateUser = async (req, res) => {
 	try {
 		const data = req.body;
-
 		// Validation
 		const { error, value } = registerSchema.validate(data);
 
@@ -127,7 +158,13 @@ exports.postCreateUser = async (req, res) => {
 
 		value.password = hashedPassword;
 
-		await userRepository.createUser(value);
+		const user = await userRepository.createUser(value);
+
+		let salary = req.body.salary;
+		salary.eid = user.dataValues.eid;
+
+		const after = await userRepository.createSalary(salary);
+		console.log(after);
 
 		passport.authenticate('local')(req, res, () => {
 			res

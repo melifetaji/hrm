@@ -13,10 +13,14 @@ module.exports = (sequelize, DataTypes) => {
 	}
 	salary.init(
 		{
-			sid: { type: DataTypes.INTEGER, primaryKey: true },
-			amount: { type: DataTypes.INTEGER, allowNull: false },
-			annual: DataTypes.BIGINT,
-			bonus: DataTypes.INTEGER,
+			id: {
+				type: DataTypes.UUID,
+				defaultValue: DataTypes.UUIDV4,
+				primaryKey: true,
+			},
+			monthly: { type: DataTypes.INTEGER, allowNull: false },
+			allowance: { type: DataTypes.INTEGER },
+			bonus: { type: DataTypes.INTEGER },
 		},
 		{
 			sequelize,
