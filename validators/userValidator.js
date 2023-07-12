@@ -8,7 +8,8 @@ const registerSchema = Joi.object({
 	age: Joi.number().min(1).max(120),
 	email: Joi.string().email().required(),
 	position: Joi.string().min(2).max(20),
-	role: Joi.string().min(2).max(20),
+	did: Joi.string(),
+	role: Joi.string().valid('admin', 'manager', 'basic'),
 	ssn: Joi.number(),
 });
 
@@ -18,6 +19,7 @@ const updateSchema = Joi.object({
 	gender: Joi.string().min(2).max(10),
 	age: Joi.number().min(1).max(120),
 	position: Joi.string().min(2).max(20),
+	did: Joi.string(),
 	role: Joi.string().valid('admin', 'manager', 'basic'),
 	ssn: Joi.number(),
 });

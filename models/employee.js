@@ -15,9 +15,7 @@ module.exports = (sequelize, DataTypes) => {
 			});
 			this.hasOne(models.salary, { foreignKey: 'eid' });
 			this.hasMany(models.leaves, { foreignKey: 'eid' });
-			this.belongsToMany(models.department, {
-				through: 'EmployeeDepartment',
-			});
+			this.belongsTo(models.department, { foreignKey: 'did' });
 		}
 	}
 	employee.init(

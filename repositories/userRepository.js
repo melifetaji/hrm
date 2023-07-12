@@ -17,6 +17,14 @@ class UserRepository {
 		}
 	}
 
+	async getUsersByDepartment(did) {
+		try {
+			return await Employee.findAll({ where: { did } });
+		} catch (error) {
+			throw new Error('Failed to get user by did: ' + error.message);
+		}
+	}
+
 	async createUser(userData) {
 		try {
 			return await Employee.create(userData);

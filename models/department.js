@@ -8,21 +8,22 @@ module.exports = (sequelize, DataTypes) => {
 		 * The `models/index` file will call this method automatically.
 		 */
 		static associate(models) {
+			this.hasMany(models.employee, { foreignKey: 'did' });
 			this.belongsToMany(models.project, { through: 'ProjectsDepartments' });
 			this.belongsToMany(models.employee, {
 				through: 'DepartmentManager',
-			});
-			this.belongsToMany(models.employee, {
-				through: 'EmployeeDepartment',
 			});
 		}
 	}
 	department.init(
 		{
-			did: { type: DataTypes.INTEGER, primaryKey: true },
+			id: {
+				type: DataTypes.UUID,
+				defaultValue: DataTypes.UUIDV4,
+				primaryKey: true,
+			},
 			name: { type: DataTypes.STRING, allowNull: false },
 			description: DataTypes.STRING,
-			manager: DataTypes.INTEGER,
 		},
 		{
 			sequelize,

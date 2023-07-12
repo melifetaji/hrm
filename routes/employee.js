@@ -9,6 +9,7 @@ router.patch('/change-password', employeeController.patchPassword);
 router.post('/register', employeeController.postCreateUser);
 router.get('/logout', employeeController.getLogout);
 router.post('/login', employeeController.postLogin);
+router.get('/department', employeeController.getUserByDepartment);
 router.get('/profile', employeeController.getProfile);
 router.delete('/:id', employeeController.deleteUser);
 router.patch('/:id', employeeController.patchUpdateUser);
