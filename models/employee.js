@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
 			this.hasMany(models.announcements, { foreignKey: 'eid' });
 			this.belongsTo(models.department, { foreignKey: 'did' });
 
+			this.belongsTo(models.project, { foreignKey: 'manager' });
+
 			this.belongsToMany(models.project, {
 				through: 'projectEmployee',
 			});
