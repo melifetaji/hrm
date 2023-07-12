@@ -14,10 +14,17 @@ module.exports = (sequelize, DataTypes) => {
 	}
 	projects.init(
 		{
-			pid: { type: DataTypes.INTEGER, primaryKey: true },
+			id: {
+				type: DataTypes.UUID,
+				defaultValue: DataTypes.UUIDV4,
+				primaryKey: true,
+			},
 			name: DataTypes.STRING,
 			description: DataTypes.STRING,
-			status: DataTypes.STRING,
+			status: {
+				type: DataTypes.ENUM('pending', 'ongoing', 'completed'),
+				defaultValue: 'pending',
+			},
 		},
 		{
 			sequelize,
