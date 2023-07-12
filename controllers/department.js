@@ -30,6 +30,12 @@ exports.postCreate = async (req, res) => {
 };
 
 exports.getAll = async (req, res) => {
+	if (!req.isAuthenticated()) {
+		return res.status(403).json({ err: 'Not authenticated' });
+	}
+	if (req.user.role == 'basic') {
+		return res.status(403).json({ err: 'No permissions' });
+	}
 	try {
 		const all = await DepartmentRepository.getAll();
 		if (all.length === 0) {
@@ -45,6 +51,13 @@ exports.getAll = async (req, res) => {
 
 exports.getById = async (req, res) => {
 	const id = req.params.id;
+
+	if (!req.isAuthenticated()) {
+		return res.status(403).json({ err: 'Not authenticated' });
+	}
+	if (req.user.role == 'basic' && !req.user.did == id) {
+		return res.status(403).json({ err: 'No permissions' });
+	}
 
 	try {
 		const department = await DepartmentRepository.getById(id);
@@ -62,8 +75,8 @@ exports.getById = async (req, res) => {
 };
 
 exports.patchUpdate = async (req, res) => {
-	if (!req.isAuthenticated() || !req.user) {
-		return res.status(403).json({ err: 'Not authorized' });
+	if (!req.isAuthenticated()) {
+		return res.status(403).json({ err: 'Not authenticated' });
 	}
 	if (req.user.role == 'basic') {
 		return res.status(403).json({ err: 'No permissions' });

@@ -75,9 +75,11 @@ exports.getApplicants = async (req, res) => {
 	}
 	try {
 		const applicants = await ApplicantRepository.getAll();
+		if (!applicants) {
+			return res.status(404).json({ err: 'Applicant not found' });
+		}
 		res.status(200).json(applicants);
 	} catch (err) {
 		return res.status(500).json(err);
 	}
 };
-// get by id

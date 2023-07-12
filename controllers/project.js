@@ -21,11 +21,18 @@ exports.postCreate = async (req, res) => {
 		return res.status(400).json({ error: error.details[0].message });
 	}
 
+	if (!value.manager) {
+		value.manager = req.user.eid;
+		console.log(req.user.eid);
+	}
+
 	try {
-		await ProjectRepository.create(value).catch((e) => console.log(e));
+		await ProjectRepository.create(value);
 		return res.status(200).json('Project successfully created!');
 	} catch (err) {
-		return res.status(500).json({ err });
+		return res
+			.status(500)
+			.json({ error: 'Failed to create project. Please try again later.' });
 	}
 };
 

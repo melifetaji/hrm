@@ -1,4 +1,6 @@
+const ProjectEmployee = require('../models').projectEmployee;
 const Employee = require('../models').employee;
+const Project = require('../models').project;
 
 class UserRepository {
 	async getUserById(id) {
@@ -22,6 +24,28 @@ class UserRepository {
 			return await Employee.findAll({ where: { did } });
 		} catch (error) {
 			throw new Error('Failed to get user by did: ' + error.message);
+		}
+	}
+
+	async getUsersByProject(projectId) {
+		try {
+			const users = await Employee.findAll({
+				include: [
+					{
+						model: Project,
+						through: {
+							model: ProjectEmployee,
+							where: { projectId: projectId },
+						},
+						attributes: [],
+						required: true,
+					},
+				],
+			});
+
+			return users;
+		} catch (error) {
+			throw new Error('Error retrieving users by project: ' + error.message);
 		}
 	}
 
@@ -54,6 +78,16 @@ class UserRepository {
 			}
 		} catch (error) {
 			throw new Error('Failed to delete user: ' + error.message);
+		}
+	}
+
+	async assignToProject(employeeEid, projectId) {
+		try {
+			console.log(employeeEid, 'EIDDDDDD');
+			console.log(projectId, 'PIDDDDDD');
+			return await ProjectEmployee.create({ employeeEid, projectId });
+		} catch (error) {
+			throw new Error('Failed to create user: ' + error.message);
 		}
 	}
 }
