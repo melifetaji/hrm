@@ -14,11 +14,18 @@ module.exports = (sequelize, DataTypes) => {
 	}
 	leaves.init(
 		{
-			lid: { type: DataTypes.INTEGER, primaryKey: true },
-			date: { type: DataTypes.DATE, allowNull: false },
+			id: {
+				type: DataTypes.UUID,
+				defaultValue: DataTypes.UUIDV4,
+				primaryKey: true,
+			},
+			startDate: { type: DataTypes.DATE, allowNull: false },
+			endDate: { type: DataTypes.DATE, allowNull: false },
+			status: {
+				type: DataTypes.ENUM('pending', 'approved', 'rejected'),
+				defaultValue: 'pending',
+			},
 			reason: DataTypes.STRING,
-			status: DataTypes.STRING,
-			days: { type: DataTypes.INTEGER, allowNullL: false },
 		},
 		{
 			sequelize,

@@ -117,8 +117,6 @@ class UserRepository {
 
 	async assignToProject(employeeEid, projectId) {
 		try {
-			console.log(employeeEid, 'EIDDDDDD');
-			console.log(projectId, 'PIDDDDDD');
 			return await ProjectEmployee.create({ employeeEid, projectId });
 		} catch (error) {
 			throw new Error('Failed to create user: ' + error.message);
