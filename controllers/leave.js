@@ -26,3 +26,41 @@ exports.postCreate = async (req, res) => {
 		return res.status(500).send(err.message);
 	}
 };
+
+exports.getAll = async (req, res) => {
+	const status = req.query.status;
+
+	if (!req.isAuthenticated()) {
+		return res.status(403).json({ err: 'Not authenticated' });
+	}
+	if (req.user.role !== 'admin') {
+		return res.status(403).json({ err: 'No permissions' });
+	}
+
+	try {
+		let leaves;
+
+		if (!status) {
+			leaves = await LeavesRepository.getAll();
+		} else {
+			leaves = await LeavesRepository.getByStatus(status);
+		}
+
+		if (leaves.length === 0) {
+			return res.status(404).json('No leave requests were found');
+		}
+
+		res.status(200).json(leaves);
+	} catch (err) {
+		res.status(500).json(err.message);
+	}
+};
+
+exports.getByStatus = async (req, res) => {
+	if (!req.isAuthenticated()) {
+		return res.status(403).json({ err: 'Not authenticated' });
+	}
+	if (req.user.role !== 'admin') {
+		return res.status(403).json({ err: 'No permissions' });
+	}
+};

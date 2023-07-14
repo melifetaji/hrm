@@ -49,7 +49,7 @@ class LeavesRepository {
 		}
 	}
 
-	async getAllLeaves() {
+	async getAll() {
 		try {
 			const leaves = await Leaves.findAll();
 			return leaves;
@@ -58,7 +58,7 @@ class LeavesRepository {
 		}
 	}
 
-	async getLeavesByStatus(status) {
+	async getByStatus(status) {
 		try {
 			const leaves = await Leaves.findAll({ where: { status } });
 			return leaves;
