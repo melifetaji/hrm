@@ -21,6 +21,7 @@ const openingRoutes = require('./routes/openings');
 const applicantRoutes = require('./routes/applicant');
 const departmentRoutes = require('./routes/department');
 const projectRoutes = require('./routes/project');
+const leaveRoutes = require('./routes/leaves');
 
 app.use('/apply', applicantRoutes);
 app.use('/users', userRoutes);
@@ -28,6 +29,7 @@ app.use('/announcements', announcementRoutes);
 app.use('/openings', openingRoutes);
 app.use('/departments', departmentRoutes);
 app.use('/projects', projectRoutes);
+app.use('/leaves', leaveRoutes);
 
 // Start Server & Connect to DB!z
 app.listen({ port: 3000 }, async () => {

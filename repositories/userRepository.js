@@ -1,7 +1,7 @@
 const ProjectEmployee = require('../models').projectEmployee;
 const Employee = require('../models').employee;
 const Project = require('../models').project;
-
+const Salary = require('../models').salary;
 class UserRepository {
 	async getUserById(id) {
 		try {
@@ -10,7 +10,13 @@ class UserRepository {
 			throw new Error('Failed to get user by ID: ' + error.message);
 		}
 	}
-
+	async getWithSalary(eid) {
+		const user = await Employee.findOne({
+			where: { eid },
+			include: { model: Salary },
+		});
+		return user;
+	}
 	async getUserByEmail(email) {
 		try {
 			return await Employee.findOne({ where: { email } });
@@ -57,6 +63,34 @@ class UserRepository {
 		}
 	}
 
+	async createSalary(salaryData) {
+		try {
+			return await Salary.create(salaryData);
+		} catch (error) {
+			throw new Error('Failed to create user: ' + error.message);
+		}
+	}
+
+	async updateSalary(eid, updatedSalaryData) {
+		try {
+			const user = await Employee.findByPk(eid);
+			if (!user) {
+				throw new Error('User not found.');
+			}
+
+			const salary = await user.getSalary();
+			if (!salary) {
+				throw new Error('Salary not found.');
+			}
+
+			await salary.update(updatedSalaryData);
+
+			return salary;
+		} catch (error) {
+			throw new Error('Failed to update salary: ' + error.message);
+		}
+	}
+
 	async updateUser(id, updatedUserData) {
 		try {
 			const result = await Employee.update(updatedUserData, {
@@ -83,8 +117,6 @@ class UserRepository {
 
 	async assignToProject(employeeEid, projectId) {
 		try {
-			console.log(employeeEid, 'EIDDDDDD');
-			console.log(projectId, 'PIDDDDDD');
 			return await ProjectEmployee.create({ employeeEid, projectId });
 		} catch (error) {
 			throw new Error('Failed to create user: ' + error.message);

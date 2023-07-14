@@ -11,6 +11,7 @@ const registerSchema = Joi.object({
 	did: Joi.string(),
 	role: Joi.string().valid('admin', 'manager', 'basic'),
 	ssn: Joi.number(),
+	salary: Joi.object(),
 });
 
 const updateSchema = Joi.object({
@@ -22,6 +23,7 @@ const updateSchema = Joi.object({
 	did: Joi.string(),
 	role: Joi.string().valid('admin', 'manager', 'basic'),
 	ssn: Joi.number(),
+	salary: Joi.object(),
 });
 
 const passwordSchema = Joi.object({
@@ -29,4 +31,10 @@ const passwordSchema = Joi.object({
 	confirm: Joi.string().min(8).max(30).required(),
 });
 
-module.exports = { registerSchema, updateSchema, passwordSchema };
+const updateSalary = Joi.object({
+	monthly: Joi.number(),
+	bonus: Joi.number(),
+	allowance: Joi.number(),
+});
+
+module.exports = { registerSchema, updateSchema, passwordSchema, updateSalary };
