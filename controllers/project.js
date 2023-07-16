@@ -23,7 +23,6 @@ exports.postCreate = async (req, res) => {
 
 	if (!value.manager) {
 		value.manager = req.user.eid;
-		console.log(req.user.eid);
 	}
 
 	try {

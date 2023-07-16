@@ -49,7 +49,7 @@ class LeavesRepository {
 		}
 	}
 
-	async getAllLeaves() {
+	async getAll() {
 		try {
 			const leaves = await Leaves.findAll();
 			return leaves;
@@ -58,7 +58,7 @@ class LeavesRepository {
 		}
 	}
 
-	async getLeavesByStatus(status) {
+	async getByStatus(status) {
 		try {
 			const leaves = await Leaves.findAll({ where: { status } });
 			return leaves;
@@ -67,16 +67,25 @@ class LeavesRepository {
 		}
 	}
 
-	async getLeavesByEmployee(employeeId) {
+	async getByEmployee(eid) {
 		try {
-			const leaves = await Leaves.findAll({ where: { employeeId } });
+			const leaves = await Leaves.findAll({ where: { eid } });
 			return leaves;
 		} catch (error) {
 			throw new Error('Failed to retrieve leaves by employee');
 		}
 	}
 
-	async updateLeave(leaveId, updateData) {
+	async getById(id) {
+		try {
+			const leave = await Leaves.findOne({ where: { id } });
+			return leave;
+		} catch (error) {
+			throw new Error('Failed to retrieve leave');
+		}
+	}
+
+	async approve(leaveId, updateData) {
 		try {
 			const leave = await Leaves.findByPk(leaveId);
 			if (!leave) {
@@ -90,7 +99,7 @@ class LeavesRepository {
 		}
 	}
 
-	async deleteLeave(leaveId) {
+	async delete(leaveId) {
 		try {
 			const leave = await Leaves.findByPk(leaveId);
 			if (!leave) {
