@@ -67,12 +67,21 @@ class LeavesRepository {
 		}
 	}
 
-	async getByEmployee(employeeId) {
+	async getByEmployee(eid) {
 		try {
-			const leaves = await Leaves.findAll({ where: { employeeId } });
+			const leaves = await Leaves.findAll({ where: { eid } });
 			return leaves;
 		} catch (error) {
 			throw new Error('Failed to retrieve leaves by employee');
+		}
+	}
+
+	async getById(id) {
+		try {
+			const leave = await Leaves.findOne({ where: { id } });
+			return leave;
+		} catch (error) {
+			throw new Error('Failed to retrieve leave');
 		}
 	}
 
