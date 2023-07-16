@@ -55,12 +55,3 @@ exports.getAll = async (req, res) => {
 		res.status(500).json(err.message);
 	}
 };
-
-exports.getByStatus = async (req, res) => {
-	if (!req.isAuthenticated()) {
-		return res.status(403).json({ err: 'Not authenticated' });
-	}
-	if (req.user.role !== 'admin') {
-		return res.status(403).json({ err: 'No permissions' });
-	}
-};

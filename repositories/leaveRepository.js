@@ -67,7 +67,7 @@ class LeavesRepository {
 		}
 	}
 
-	async getLeavesByEmployee(employeeId) {
+	async getByEmployee(employeeId) {
 		try {
 			const leaves = await Leaves.findAll({ where: { employeeId } });
 			return leaves;
@@ -76,7 +76,7 @@ class LeavesRepository {
 		}
 	}
 
-	async updateLeave(leaveId, updateData) {
+	async approve(leaveId, updateData) {
 		try {
 			const leave = await Leaves.findByPk(leaveId);
 			if (!leave) {
@@ -90,7 +90,7 @@ class LeavesRepository {
 		}
 	}
 
-	async deleteLeave(leaveId) {
+	async delete(leaveId) {
 		try {
 			const leave = await Leaves.findByPk(leaveId);
 			if (!leave) {

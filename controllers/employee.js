@@ -59,7 +59,6 @@ exports.getUsersByProject = async (req, res) => {
 	}
 
 	const projectId = req.query.id;
-	console.log(projectId);
 	const users = await userRepository
 		.getUsersByProject(projectId)
 		.catch((e) => console.log(e));
@@ -77,7 +76,6 @@ exports.getUsersByProject = async (req, res) => {
 };
 
 exports.getProfile = async (req, res) => {
-	console.log(req.query.salary);
 	if (req.query.salary == 'true') {
 		const profile = await userRepository.getWithSalary(req.user.eid);
 		return res.status(200).json(profile);
@@ -164,7 +162,6 @@ exports.postCreateUser = async (req, res) => {
 		salary.eid = user.dataValues.eid;
 
 		const after = await userRepository.createSalary(salary);
-		console.log(after);
 
 		passport.authenticate('local')(req, res, () => {
 			res
@@ -244,11 +241,7 @@ exports.assignToProject = async (req, res) => {
 		return res.status(403).send('No permissions');
 	}
 	const { user, project } = req.body;
-	console.log(
-		'iasdhasdjuasdjuasdjiasdjidasjioasdjoiasdjiosdajioasjiosdodjiasdjidoasjjioasoasdjdoasjdoasjasdjidasjiasdojasdji',
-		user,
-		project
-	);
+
 	await userRepository
 		.assignToProject(user, project)
 		.then((result) => {
