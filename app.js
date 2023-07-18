@@ -6,9 +6,11 @@ require('dotenv').config();
 require('./strategies/local');
 
 const { sequelize, User } = require('./models');
+const auth = require('./middleware/auth');
+
+const app = express();
 
 // Middleware
-const app = express();
 app.use(express.json());
 app.use(sessionMiddleware);
 app.use(passport.initialize());
@@ -31,7 +33,10 @@ app.use('/departments', departmentRoutes);
 app.use('/projects', projectRoutes);
 app.use('/leaves', leaveRoutes);
 
-// Start Server & Connect to DB!z
+app.get('/onlyAuth', auth, (req, res) => {
+	return res.send('HELLO AUTHENTICATED');
+});
+
 app.listen({ port: 3000 }, async () => {
 	console.log('Server running on port 3000');
 	// await sequelize.sync({ force: true });
