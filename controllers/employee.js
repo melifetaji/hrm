@@ -11,12 +11,6 @@ const {
 } = require('../validators/userValidator');
 
 exports.patchUpdateSalary = async (req, res) => {
-	if (!req.isAuthenticated()) {
-		return res.status(403).json({ err: 'You need to log in' });
-	}
-	if (req.user.role !== 'admin') {
-		return res.status(403).send('No permissions');
-	}
 	const salaryData = req.body;
 
 	const { error, value } = updateSalary.validate(salaryData);
@@ -38,9 +32,6 @@ exports.patchUpdateSalary = async (req, res) => {
 exports.getUserByDepartment = async (req, res) => {
 	const did = req.query.did;
 	try {
-		if (!req.isAuthenticated()) {
-			return res.status(403).json({ err: 'You need to log in' });
-		}
 		const users = await userRepository.getUsersByDepartment(did);
 
 		if (users.length === 0) {
@@ -49,45 +40,36 @@ exports.getUserByDepartment = async (req, res) => {
 
 		return res.status(200).json(users);
 	} catch (err) {
-		res.status(500).json({ err: "Couldn't fetch employees" });
+		return res.status(500).json({ err: "Couldn't fetch employees" });
 	}
 };
 
 exports.getUsersByProject = async (req, res) => {
-	if (!req.isAuthenticated() || !req.user) {
-		return res.status(403).json({ err: 'Not authorized' });
-	}
-
 	const projectId = req.query.id;
-	const users = await userRepository
-		.getUsersByProject(projectId)
-		.catch((e) => console.log(e));
 
 	try {
+		const users = await userRepository.getUsersByProject(projectId);
+
 		if (users.length === 0) {
 			return res.status(404).json({ err: 'No applicants were found' });
 		}
 		return res.status(200).json(users);
 	} catch (err) {
-		return res
-			.status(500)
-			.json({ err: 'An error occurred while finding users' });
+		return res.status(500).json(err.message);
 	}
 };
 
 exports.getProfile = async (req, res) => {
-	if (req.query.salary == 'true') {
-		const profile = await userRepository.getWithSalary(req.user.eid);
-		return res.status(200).json(profile);
-	}
-
+	const id = req.user.eid;
 	try {
-		if (!req.isAuthenticated()) {
-			return res.status(403).json({ err: 'You need to log in' });
+		if (req.query.salary == 'true') {
+			const profile = await userRepository.getWithSalary(id);
+			return res.status(200).json(profile);
 		}
+
 		return res.status(200).json(req.user);
 	} catch (err) {
-		res.status(500).json({ err: "Couldn't fetch your profile" });
+		return res.status(500).json({ err: "Couldn't fetch your profile" });
 	}
 };
 
@@ -129,8 +111,8 @@ exports.postLogin = async (req, res, next) => {
 };
 
 exports.getUserById = async (req, res) => {
+	const id = req.params.id;
 	try {
-		const id = req.params.id;
 		let user = await userRepository.getUserById(id);
 
 		delete user.dataValues.password;
@@ -145,12 +127,13 @@ exports.getUserById = async (req, res) => {
 exports.postCreateUser = async (req, res) => {
 	try {
 		const data = req.body;
-		// Validation
+
 		const { error, value } = registerSchema.validate(data);
 
 		if (error) {
 			return res.status(400).json({ error: error.details[0].message });
 		}
+
 		const salt = await bcrypt.genSalt(10);
 		const hashedPassword = await bcrypt.hash(value.password, salt);
 
@@ -184,13 +167,11 @@ exports.deleteUser = async (req, res) => {
 };
 
 exports.patchUpdateUser = async (req, res) => {
-	if (!req.isAuthenticated()) {
-		return res.send('You are not authenticated');
-	}
 	try {
 		const id = req.params.id;
 		const data = req.body;
-		if (req.user.eid !== id) {
+
+		if (req.user.eid !== id || req.user.role !== 'admin') {
 			return res.status(401).send('You can only update your own profile');
 		}
 
@@ -208,9 +189,6 @@ exports.patchUpdateUser = async (req, res) => {
 };
 
 exports.patchPassword = async (req, res) => {
-	if (!req.isAuthenticated()) {
-		return res.send('You are not authenticated');
-	}
 	const data = req.body;
 	const { error, value } = passwordSchema.validate(data);
 
@@ -234,18 +212,12 @@ exports.patchPassword = async (req, res) => {
 };
 
 exports.assignToProject = async (req, res) => {
-	if (!req.isAuthenticated()) {
-		return res.status(403).send('You are not authenticated');
-	}
-	if (req.user.role !== 'admin') {
-		return res.status(403).send('No permissions');
-	}
 	const { user, project } = req.body;
 
-	await userRepository
-		.assignToProject(user, project)
-		.then((result) => {
-			res.status(200).json(result);
-		})
-		.catch((e) => res.status(400).json(e));
+	try {
+		await userRepository.assignToProject(user, project);
+		return res.status(200).json(result);
+	} catch (err) {
+		return res.status(500).json(err.message);
+	}
 };

@@ -5,10 +5,6 @@ const passport = require('passport');
 const { createSchema, approveSchema } = require('../validators/leaveValidator');
 
 exports.postCreate = async (req, res) => {
-	if (!req.isAuthenticated()) {
-		return res.status(403).json({ err: 'Not authenticated' });
-	}
-
 	const data = req.body;
 
 	let { error, value } = createSchema.validate(data);
@@ -30,13 +26,6 @@ exports.postCreate = async (req, res) => {
 exports.getAll = async (req, res) => {
 	const status = req.query.status;
 
-	if (!req.isAuthenticated()) {
-		return res.status(403).json({ err: 'Not authenticated' });
-	}
-	if (req.user.role !== 'admin') {
-		return res.status(403).json({ err: 'No permissions' });
-	}
-
 	try {
 		let leaves;
 
@@ -57,13 +46,6 @@ exports.getAll = async (req, res) => {
 };
 
 exports.patchApprove = async (req, res) => {
-	if (!req.isAuthenticated()) {
-		return res.status(403).json({ err: 'Not authenticated' });
-	}
-	if (req.user.role !== 'admin') {
-		return res.status(403).json({ err: 'No permissions' });
-	}
-
 	const id = req.params.id;
 	const data = req.body;
 
@@ -84,13 +66,10 @@ exports.patchApprove = async (req, res) => {
 exports.getByEmployee = async (req, res) => {
 	const id = req.params.id;
 
-	if (!req.isAuthenticated()) {
-		return res.status(403).json({ err: 'Not authenticated' });
-	}
-
 	if (req.user.role !== 'admin' || req.user.eid !== id) {
 		return res.status(403).json({ err: 'No permissions' });
 	}
+
 	try {
 		const leaves = await LeavesRepository.getByEmployee(id);
 		if (leaves.length === 0) {
@@ -105,9 +84,6 @@ exports.getByEmployee = async (req, res) => {
 exports.deleteLeave = async (req, res) => {
 	const id = req.params.id;
 	const eid = req.user.eid;
-	if (!req.isAuthenticated()) {
-		return res.status(403).json({ err: 'Not authenticated' });
-	}
 
 	const leaveToDelete = await LeavesRepository.getById(id);
 
@@ -128,10 +104,6 @@ exports.deleteLeave = async (req, res) => {
 };
 
 exports.getById = async (req, res) => {
-	if (!req.isAuthenticated()) {
-		return res.status(403).json({ err: 'Not authenticated' });
-	}
-
 	const id = req.params.id;
 
 	try {

@@ -8,14 +8,6 @@ const {
 } = require('../validators/announcementValidator');
 
 exports.postCreate = async (req, res) => {
-	if (!req.isAuthenticated() || !req.user) {
-		return res.status(403).json({ err: 'Not authorized' });
-	}
-
-	if (req.user.role === 'basic') {
-		return res.status(403).json({ err: 'No permissions' });
-	}
-
 	let announcement = req.body;
 	announcement.eid = req.user.eid;
 
@@ -34,10 +26,6 @@ exports.postCreate = async (req, res) => {
 };
 
 exports.getAll = async (req, res) => {
-	if (!req.isAuthenticated() || !req.user) {
-		return res.status(403).json({ err: 'Not authorized' });
-	}
-
 	try {
 		const all = await announcementRepository.getAllAnn();
 		if (!all) {
@@ -52,10 +40,6 @@ exports.getAll = async (req, res) => {
 };
 
 exports.getById = async (req, res) => {
-	if (!req.isAuthenticated() || !req.user) {
-		return res.status(403).json({ err: 'Not authorized' });
-	}
-
 	try {
 		const id = req.params.id;
 
@@ -72,13 +56,6 @@ exports.getById = async (req, res) => {
 };
 
 exports.patchUpdate = async (req, res) => {
-	if (!req.isAuthenticated() || !req.user) {
-		return res.status(403).json({ err: 'Not authorized' });
-	}
-	if (req.user.role == 'basic') {
-		return res.status(403).json({ err: 'Not authorized' });
-	}
-
 	const id = req.params.id;
 	const { error, value } = updateSchema.validate(req.body);
 
@@ -97,13 +74,6 @@ exports.patchUpdate = async (req, res) => {
 };
 
 exports.delete = async (req, res) => {
-	if (!req.isAuthenticated() || !req.user) {
-		return res.status(403).json({ err: 'Not authorized' });
-	}
-	if (req.user.role == 'basic') {
-		return res.status(403).json({ err: 'Not authorized' });
-	}
-
 	const id = req.params.id;
 
 	try {

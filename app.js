@@ -6,7 +6,6 @@ require('dotenv').config();
 require('./strategies/local');
 
 const { sequelize, User } = require('./models');
-const auth = require('./middleware/auth');
 
 const app = express();
 
@@ -32,10 +31,6 @@ app.use('/openings', openingRoutes);
 app.use('/departments', departmentRoutes);
 app.use('/projects', projectRoutes);
 app.use('/leaves', leaveRoutes);
-
-app.get('/onlyAuth', auth, (req, res) => {
-	return res.send('HELLO AUTHENTICATED');
-});
 
 app.listen({ port: 3000 }, async () => {
 	console.log('Server running on port 3000');

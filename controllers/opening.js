@@ -8,12 +8,6 @@ const {
 } = require('../validators/openingValidator');
 
 exports.postCreate = async (req, res) => {
-	if (!req.isAuthenticated()) {
-		return res.status(403).json({ err: 'Not authenticated' });
-	}
-	if (req.user.role == 'basic') {
-		return res.status(403).json({ err: 'No permissions' });
-	}
 	const data = req.body;
 	const { error, value } = createSchema.validate(data);
 
@@ -60,13 +54,6 @@ exports.getById = async (req, res) => {
 };
 
 exports.patchUpdate = async (req, res) => {
-	if (!req.isAuthenticated() || !req.user) {
-		return res.status(403).json({ err: 'Not authorized' });
-	}
-	if (req.user.role == 'basic') {
-		return res.status(403).json({ err: 'No permissions' });
-	}
-
 	const id = req.params.id;
 	const { error, value } = updateSchema.validate(req.body);
 
@@ -85,13 +72,6 @@ exports.patchUpdate = async (req, res) => {
 };
 
 exports.delete = async (req, res) => {
-	if (!req.isAuthenticated() || !req.user) {
-		return res.status(403).json({ err: 'Not authorized' });
-	}
-	if (req.user.role == 'basic') {
-		return res.status(403).json({ err: 'Not authorized' });
-	}
-
 	const id = req.params.id;
 
 	try {
