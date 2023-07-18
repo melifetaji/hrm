@@ -159,8 +159,13 @@ exports.postCreateUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
 	try {
 		const id = req.params.id;
+
+		if (id == req.user.eid) {
+			return res.status(403).json('You cannot delete your own profile!');
+		}
+
 		await userRepository.deleteUser(id);
-		res.status(200).json('User deleted successfully!');
+		res.status(200).json('User successfully deleted');
 	} catch (err) {
 		res.status(500).json('An error occurred while deleting the user.');
 	}

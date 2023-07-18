@@ -13,7 +13,6 @@ class LeavesRepository {
 			const yearStartDate = new Date(currentYear, 0, 1);
 			const yearEndDate = new Date(currentYear, 11, 31);
 
-			// Check if the user has exceeded the limit for leaves in the current year
 			const leaves = await Leaves.findAll({
 				where: {
 					eid,
@@ -33,9 +32,14 @@ class LeavesRepository {
 				totalDaysCount += daysCount;
 			}
 
-			const leavesLimit = 30; // Maximum number of leaves per year
+			const leavesLimit = 30;
 
-			if (totalDaysCount >= leavesLimit) {
+			const requestedDaysCount =
+				Math.ceil(
+					(new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24)
+				) + 1;
+
+			if (totalDaysCount + requestedDaysCount >= leavesLimit) {
 				throw new Error(
 					`You have reached the maximum limit of ${leavesLimit} leaves for the year`
 				);
@@ -45,7 +49,7 @@ class LeavesRepository {
 			const leave = await Leaves.create(leaveData);
 			return leave;
 		} catch (error) {
-			throw error; // Rethrow the error to be handled by the caller
+			throw error;
 		}
 	}
 

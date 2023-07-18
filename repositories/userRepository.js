@@ -119,7 +119,7 @@ class UserRepository {
 		try {
 			return await ProjectEmployee.create({ employeeEid, projectId });
 		} catch (error) {
-			throw new Error('Failed to create user: ' + error.message);
+			throw new Error('Failed to assign user to project');
 		}
 	}
 }
