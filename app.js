@@ -7,8 +7,9 @@ require('./strategies/local');
 
 const { sequelize, User } = require('./models');
 
-// Middleware
 const app = express();
+
+// Middleware
 app.use(express.json());
 app.use(sessionMiddleware);
 app.use(passport.initialize());
@@ -31,7 +32,6 @@ app.use('/departments', departmentRoutes);
 app.use('/projects', projectRoutes);
 app.use('/leaves', leaveRoutes);
 
-// Start Server & Connect to DB!z
 app.listen({ port: 3000 }, async () => {
 	console.log('Server running on port 3000');
 	// await sequelize.sync({ force: true });

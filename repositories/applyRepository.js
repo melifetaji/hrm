@@ -7,7 +7,7 @@ class ApplicantRepository {
 		try {
 			return await Applicant.findAll();
 		} catch (error) {
-			throw new Error('Error retrieving applicants: ' + error.message);
+			throw new Error('Error retrieving applicants');
 		}
 	}
 
@@ -15,7 +15,7 @@ class ApplicantRepository {
 		try {
 			return await Applicant.findByPk(id);
 		} catch (error) {
-			throw new Error('Error retrieving applicant by ID: ' + error.message);
+			throw new Error('Error retrieving applicant by ID');
 		}
 	}
 
@@ -23,7 +23,7 @@ class ApplicantRepository {
 		try {
 			return await Applicant.create(data);
 		} catch (error) {
-			throw new Error('Error creating applicant: ' + error.message);
+			throw new Error('Error creating applicant');
 		}
 	}
 
@@ -31,7 +31,7 @@ class ApplicantRepository {
 		try {
 			return await Applicant.destroy({ where: { id: id } });
 		} catch (error) {
-			throw new Error('Error deleting applicant: ' + error.message);
+			throw new Error('Error deleting applicant');
 		}
 	}
 
@@ -42,7 +42,7 @@ class ApplicantRepository {
 				openingId: oid,
 			});
 		} catch (error) {
-			throw new Error('Error creating applicant opening: ' + error.message);
+			throw new Error('Error creating applicant opening');
 		}
 	}
 
@@ -63,9 +63,7 @@ class ApplicantRepository {
 			});
 			return applicants;
 		} catch (error) {
-			throw new Error(
-				'Error retrieving applicants by opening: ' + error.message
-			);
+			throw new Error('Error retrieving applicants by opening');
 		}
 	}
 }

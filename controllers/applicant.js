@@ -16,15 +16,13 @@ exports.postCreate = async (req, res) => {
 	}
 
 	try {
-		const application = await ApplicantRepository.create(value).catch((e) =>
-			console.log(e)
-		);
+		const application = await ApplicantRepository.create(value);
 		await ApplicantRepository.createApplicantOpening(
 			application.dataValues.id,
 			openingId
-		).catch((e) => console.log(e));
+		);
 	} catch (err) {
-		res.status(500).json({ err: 'An error occurred while applying' });
+		return res.status(500).json(err.message);
 	}
 
 	return res.status(200).json('Applied Successfully');
@@ -52,10 +50,6 @@ exports.getApplicantsByOpenings = async (req, res) => {
 };
 
 exports.getApplicantById = async (req, res) => {
-	if (!req.isAuthenticated() || !req.user) {
-		return res.status(403).json({ err: 'Not authorized' });
-	}
-
 	const id = req.params.id;
 
 	try {
@@ -70,15 +64,12 @@ exports.getApplicantById = async (req, res) => {
 };
 
 exports.getApplicants = async (req, res) => {
-	if (!req.isAuthenticated() || !req.user) {
-		return res.status(403).json({ err: 'Not authorized' });
-	}
 	try {
 		const applicants = await ApplicantRepository.getAll();
 		if (!applicants) {
 			return res.status(404).json({ err: 'Applicant not found' });
 		}
-		res.status(200).json(applicants);
+		return res.status(200).json(applicants);
 	} catch (err) {
 		return res.status(500).json(err);
 	}
