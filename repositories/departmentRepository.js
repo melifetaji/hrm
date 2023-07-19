@@ -5,7 +5,7 @@ class DepartmentRepository {
 		try {
 			return await Department.findAll();
 		} catch (error) {
-			throw new Error('Failed to get Departments: ' + error.message);
+			throw new Error('Failed to get Departments');
 		}
 	}
 
@@ -13,7 +13,7 @@ class DepartmentRepository {
 		try {
 			return await Department.findByPk(id);
 		} catch (error) {
-			throw new Error('Failed to get Department by ID: ' + error.message);
+			throw new Error('Failed to get Department by ID');
 		}
 	}
 
@@ -21,7 +21,7 @@ class DepartmentRepository {
 		try {
 			return await Department.create(data);
 		} catch (error) {
-			throw new Error('Failed to create Department: ' + error.message);
+			throw new Error('Failed to create Department');
 		}
 	}
 
@@ -32,7 +32,7 @@ class DepartmentRepository {
 				throw new Error('Department not found.');
 			}
 		} catch (error) {
-			throw new Error('Failed to update Department: ' + error.message);
+			throw new Error('Failed to update Department');
 		}
 	}
 
@@ -43,7 +43,7 @@ class DepartmentRepository {
 				throw new Error('Department not found.');
 			}
 		} catch (error) {
-			throw new Error('Failed to delete Department: ' + error.message);
+			throw new Error('Failed to delete Department');
 		}
 	}
 }

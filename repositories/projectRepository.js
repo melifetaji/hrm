@@ -5,7 +5,7 @@ class ProjectRepository {
 		try {
 			return await Project.findAll();
 		} catch (error) {
-			throw new Error('Failed to get Projects: ' + error.message);
+			throw new Error('Failed to get Projects');
 		}
 	}
 
@@ -13,7 +13,7 @@ class ProjectRepository {
 		try {
 			return await Project.findByPk(id);
 		} catch (error) {
-			throw new Error('Failed to get Project by ID: ' + error.message);
+			throw new Error('Failed to get Project by ID');
 		}
 	}
 
@@ -21,7 +21,7 @@ class ProjectRepository {
 		try {
 			return await Project.create(data);
 		} catch (error) {
-			throw new Error('Failed to create Project: ' + error.message);
+			throw new Error('Failed to create Project');
 		}
 	}
 
@@ -32,7 +32,7 @@ class ProjectRepository {
 				throw new Error('Project not found.');
 			}
 		} catch (error) {
-			throw new Error('Failed to update Project: ' + error.message);
+			throw new Error('Failed to update Project');
 		}
 	}
 
@@ -43,7 +43,7 @@ class ProjectRepository {
 				throw new Error('Project not found.');
 			}
 		} catch (error) {
-			throw new Error('Failed to delete Project: ' + error.message);
+			throw new Error('Failed to delete Project');
 		}
 	}
 }

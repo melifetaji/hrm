@@ -5,7 +5,7 @@ class OpeningRepository {
 		try {
 			return await Opening.findAll();
 		} catch (error) {
-			throw new Error('Failed to get openings: ' + error.message);
+			throw new Error('Failed to get openings');
 		}
 	}
 
@@ -13,7 +13,7 @@ class OpeningRepository {
 		try {
 			return await Opening.findByPk(id);
 		} catch (error) {
-			throw new Error('Failed to get opening by ID: ' + error.message);
+			throw new Error('Failed to get opening by ID');
 		}
 	}
 
@@ -21,7 +21,7 @@ class OpeningRepository {
 		try {
 			return await Opening.create(data);
 		} catch (error) {
-			throw new Error('Failed to create opening: ' + error.message);
+			throw new Error('Failed to create opening');
 		}
 	}
 
@@ -32,7 +32,7 @@ class OpeningRepository {
 				throw new Error('Opening not found.');
 			}
 		} catch (error) {
-			throw new Error('Failed to update opening: ' + error.message);
+			throw new Error('Failed to update opening');
 		}
 	}
 
@@ -43,7 +43,7 @@ class OpeningRepository {
 				throw new Error('Opening not found.');
 			}
 		} catch (error) {
-			throw new Error('Failed to delete opening: ' + error.message);
+			throw new Error('Failed to delete opening');
 		}
 	}
 }

@@ -7,7 +7,7 @@ class UserRepository {
 		try {
 			return await Employee.findByPk(id);
 		} catch (error) {
-			throw new Error('Failed to get user by ID: ' + error.message);
+			throw new Error('Failed to get user by ID');
 		}
 	}
 	async getWithSalary(eid) {
@@ -21,7 +21,7 @@ class UserRepository {
 		try {
 			return await Employee.findOne({ where: { email } });
 		} catch (error) {
-			throw new Error('Failed to get user by email: ' + error.message);
+			throw new Error('Failed to get user by email');
 		}
 	}
 
@@ -29,7 +29,7 @@ class UserRepository {
 		try {
 			return await Employee.findAll({ where: { did } });
 		} catch (error) {
-			throw new Error('Failed to get user by did: ' + error.message);
+			throw new Error('Failed to get user by did');
 		}
 	}
 
@@ -51,7 +51,7 @@ class UserRepository {
 
 			return users;
 		} catch (error) {
-			throw new Error('Error retrieving users by project: ' + error.message);
+			throw new Error('Error retrieving users by project');
 		}
 	}
 
@@ -59,7 +59,7 @@ class UserRepository {
 		try {
 			return await Employee.create(userData);
 		} catch (error) {
-			throw new Error('Failed to create user: ' + error.message);
+			throw new Error('Failed to create user');
 		}
 	}
 
@@ -67,7 +67,7 @@ class UserRepository {
 		try {
 			return await Salary.create(salaryData);
 		} catch (error) {
-			throw new Error('Failed to create user: ' + error.message);
+			throw new Error('Failed to create user');
 		}
 	}
 
@@ -87,7 +87,7 @@ class UserRepository {
 
 			return salary;
 		} catch (error) {
-			throw new Error('Failed to update salary: ' + error.message);
+			throw new Error('Failed to update salary');
 		}
 	}
 
@@ -100,7 +100,7 @@ class UserRepository {
 				throw new Error('User not found.');
 			}
 		} catch (error) {
-			throw new Error('Failed to update user: ' + error.message);
+			throw new Error('Failed to update user');
 		}
 	}
 
@@ -111,7 +111,7 @@ class UserRepository {
 				throw new Error('User not found.');
 			}
 		} catch (error) {
-			throw new Error('Failed to delete user: ' + error.message);
+			throw new Error('Failed to delete user');
 		}
 	}
 
