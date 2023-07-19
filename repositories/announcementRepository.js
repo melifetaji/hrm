@@ -5,7 +5,7 @@ class announcementRepository {
 		try {
 			return await Announcement.findAll();
 		} catch (error) {
-			throw new Error('Failed to get announcements: ' + error.message);
+			throw new Error('Failed to get announcements');
 		}
 	}
 
@@ -13,7 +13,7 @@ class announcementRepository {
 		try {
 			return await Announcement.findByPk(id);
 		} catch (error) {
-			throw new Error('Failed to get announcement by ID: ' + error.message);
+			throw new Error('Failed to get announcement by ID');
 		}
 	}
 
@@ -21,7 +21,7 @@ class announcementRepository {
 		try {
 			return await Announcement.create(data);
 		} catch (error) {
-			throw new Error('Failed to create announcement: ' + error.message);
+			throw new Error('Failed to create announcement');
 		}
 	}
 
@@ -34,7 +34,7 @@ class announcementRepository {
 				throw new Error('Announcement not found.');
 			}
 		} catch (error) {
-			throw new Error('Failed to update announcement: ' + error.message);
+			throw new Error('Failed to update announcement');
 		}
 	}
 
@@ -45,7 +45,7 @@ class announcementRepository {
 				throw new Error('Announcement not found.');
 			}
 		} catch (error) {
-			throw new Error('Failed to delete announcement: ' + error.message);
+			throw new Error('Failed to delete announcement');
 		}
 	}
 }
