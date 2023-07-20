@@ -37,6 +37,20 @@ class UserRepository {
 		}
 	}
 
+	async getAdminEmails() {
+		try {
+			const emails = await Employee.findAll({
+				attributes: ['email'],
+				raw: true,
+				where: { role: 'admin' },
+			});
+
+			return emails.map((obj) => obj.email);
+		} catch (error) {
+			throw new Error('Failed to get user emails');
+		}
+	}
+
 	async getUsersByDepartment(did) {
 		try {
 			return await Employee.findAll({ where: { did } });

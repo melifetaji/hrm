@@ -8,8 +8,8 @@ const announcementMail = async (announcement) => {
 		const emails = await UserRepository.getAllEmails();
 
 		const options = {
-			from: process.env.SENDER_MAIL,
-			to: 'melfetaji@gmail.com',
+			from: 'melfetaji@gmail.com',
+			to: emails,
 			subject: announcement.name,
 			text: announcement.description,
 		};
