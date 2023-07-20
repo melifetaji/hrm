@@ -15,6 +15,7 @@ app.use(express.json());
 app.use(sessionMiddleware);
 app.use(passport.initialize());
 app.use(passport.session());
+app.disable('x-powered-by');
 app.use(logger);
 
 // Routes

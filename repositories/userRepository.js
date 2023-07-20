@@ -24,6 +24,18 @@ class UserRepository {
 			throw new Error('Failed to get user by email');
 		}
 	}
+	async getAllEmails() {
+		try {
+			const emails = await Employee.findAll({
+				attributes: ['email'],
+				raw: true,
+			});
+
+			return emails.map((obj) => obj.email);
+		} catch (error) {
+			throw new Error('Failed to get user emails');
+		}
+	}
 
 	async getUsersByDepartment(did) {
 		try {
