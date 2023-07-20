@@ -1,6 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 const { redisClient, sessionMiddleware } = require('./strategies/redis');
+const logger = require('./utils/logger');
 
 require('dotenv').config();
 require('./strategies/local');
@@ -14,6 +15,8 @@ app.use(express.json());
 app.use(sessionMiddleware);
 app.use(passport.initialize());
 app.use(passport.session());
+app.disable('x-powered-by');
+app.use(logger);
 
 // Routes
 const userRoutes = require('./routes/employee');

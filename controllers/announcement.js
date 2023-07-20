@@ -1,6 +1,7 @@
 const express = require('express');
 const announcementRepository = require('../repositories/announcementRepository');
 const passport = require('passport');
+const announcementMail = require('../utils/email/announcement');
 
 const {
 	createSchema,
@@ -18,10 +19,12 @@ exports.postCreate = async (req, res) => {
 	}
 
 	try {
-		await announcementRepository.createAnn(value);
-		res.status(200).json(value);
+		const announcement = await announcementRepository.createAnn(value);
+		await announcementMail(announcement);
+
+		return res.status(200).json(value);
 	} catch (err) {
-		res.status(500).json(err);
+		return res.status(500).json(err);
 	}
 };
 
