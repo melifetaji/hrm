@@ -4,6 +4,7 @@ const passport = require('passport');
 const ApplicantRepository = require('../repositories/applyRepository');
 const OpeningRepository = require('../repositories/openingRepository');
 const { applySchema } = require('../validators/applyValidator');
+const applicantMail = require('../utils/email/applicant');
 
 exports.postCreate = async (req, res) => {
 	const openingId = req.query.id;
@@ -21,6 +22,7 @@ exports.postCreate = async (req, res) => {
 			application.dataValues.id,
 			openingId
 		);
+		await applicantMail();
 	} catch (err) {
 		return res.status(500).json(err.message);
 	}
