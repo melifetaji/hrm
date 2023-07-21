@@ -39,6 +39,20 @@ class ResetTokenRepository {
 			throw new Error('Failed to delete ResetToken');
 		}
 	}
+
+	async deleteExpired() {
+		try {
+			await ResetToken.destroy({
+				where: {
+					expiresAt: {
+						[Op.lt]: new Date(),
+					},
+				},
+			});
+		} catch (error) {
+			throw new Error('Failed to delete CRON ResetTokens');
+		}
+	}
 }
 
 module.exports = new ResetTokenRepository();
