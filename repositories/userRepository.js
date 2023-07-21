@@ -122,11 +122,8 @@ class UserRepository {
 			const result = await Employee.update(updatedUserData, {
 				where: { eid: id },
 			});
-			if (result[0] === 0) {
-				throw new Error('User not found.');
-			}
 		} catch (error) {
-			throw new Error('Failed to update user');
+			throw new Error(error);
 		}
 	}
 
