@@ -29,7 +29,7 @@ const applicantMail = async () => {
 
 		transporter.sendMail(options, (err, info) => {
 			if (err) {
-				console.log(`Error sending email`, err);
+				throw new Error(`Error sending email`, err);
 			} else {
 				console.log(`Email sent`, info.response);
 			}

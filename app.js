@@ -2,6 +2,7 @@ const express = require('express');
 const passport = require('passport');
 const { redisClient, sessionMiddleware } = require('./strategies/redis');
 const logger = require('./utils/logger');
+const cronTokens = require('./utils/cron/tokens');
 
 require('dotenv').config();
 require('./strategies/local');
