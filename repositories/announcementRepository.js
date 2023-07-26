@@ -28,11 +28,12 @@ class announcementRepository {
 	async updateAnn(id, updatedAnn) {
 		try {
 			const result = await Announcement.update(updatedAnn, {
-				where: { id: id },
+				where: { id },
 			});
 			if (result[0] === 0) {
 				throw new Error('Announcement not found.');
 			}
+			return result;
 		} catch (error) {
 			throw new Error('Failed to update announcement');
 		}

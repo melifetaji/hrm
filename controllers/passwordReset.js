@@ -10,6 +10,10 @@ const ResetTokenRepository = require('../repositories/resetTokenRepository');
 const { passwordSchema } = require('../validators/userValidator');
 
 exports.reset = async (req, res) => {
+	if (req.isAuthenticated()) {
+		return res.redirect('/');
+	}
+
 	const { token, password, confirm } = req.body;
 
 	const { error, value } = passwordSchema.validate({ password, confirm });
@@ -54,6 +58,10 @@ exports.reset = async (req, res) => {
 };
 
 exports.forgot = async (req, res) => {
+	if (req.isAuthenticated()) {
+		return res.redirect('/');
+	}
+
 	const { email } = req.body;
 
 	try {

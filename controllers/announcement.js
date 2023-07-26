@@ -22,7 +22,7 @@ exports.postCreate = async (req, res) => {
 		const announcement = await announcementRepository.createAnn(value);
 		await announcementMail(announcement);
 
-		return res.status(200).json(value);
+		return res.status(200).json(announcement);
 	} catch (err) {
 		return res.status(500).json(err);
 	}
@@ -60,6 +60,7 @@ exports.getById = async (req, res) => {
 
 exports.patchUpdate = async (req, res) => {
 	const id = req.params.id;
+
 	const { error, value } = updateSchema.validate(req.body);
 
 	if (error) {
@@ -67,7 +68,7 @@ exports.patchUpdate = async (req, res) => {
 	}
 
 	try {
-		await announcementRepository.updateAnn(id, value);
+		const announcement = await announcementRepository.updateAnn(id, value);
 		return res.status(200).json('Successfully updated announcement');
 	} catch (err) {
 		return res

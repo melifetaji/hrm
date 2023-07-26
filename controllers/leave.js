@@ -16,8 +16,8 @@ exports.postCreate = async (req, res) => {
 	value.eid = req.user.eid;
 
 	try {
-		await LeavesRepository.create(value);
-		return res.status(200).json('Leave request successfully submitted!');
+		const leave = await LeavesRepository.create(value);
+		return res.status(200).json(leave);
 	} catch (err) {
 		return res.status(500).send(err.message);
 	}

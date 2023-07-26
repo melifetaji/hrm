@@ -23,11 +23,10 @@ exports.postCreate = async (req, res) => {
 			openingId
 		);
 		await applicantMail();
+		return res.status(200).json(application);
 	} catch (err) {
 		return res.status(500).json(err.message);
 	}
-
-	return res.status(200).json('Applied Successfully');
 };
 
 exports.getApplicantsByOpenings = async (req, res) => {
