@@ -1,15 +1,26 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
-const crypto = require('crypto');
-const moment = require('moment');
-const forgotMail = require('../utils/email/forgot-password');
+
+const generateToken = require('../utils/token-generator');
 
 const userRepository = require('../repositories/userRepository');
 const ResetTokenRepository = require('../repositories/resetTokenRepository');
 
+const { passwordSchema } = require('../validators/userValidator');
+
 exports.reset = async (req, res) => {
-	const { token, password } = req.body;
+	const { token, password, confirm } = req.body;
+
+	const { error, value } = passwordSchema.validate({ password, confirm });
+
+	if (error) {
+		return res.status(403).json({ error: error.details[0].message });
+	}
+
+	if (password !== confirm) {
+		return res.status(403).json({ error: 'Password confirmation incorrect' });
+	}
 
 	try {
 		const resetToken = await ResetTokenRepository.findByToken(token);
@@ -21,13 +32,13 @@ exports.reset = async (req, res) => {
 		let user = await userRepository.getUserById(resetToken.eid);
 
 		user = user.dataValues;
-		console.log(user);
+
 		if (!user) {
 			return res.status(400).json({ error: 'User not found.' });
 		}
 
 		const salt = await bcrypt.genSalt(10);
-		const hashedPassword = await bcrypt.hash(password, salt);
+		const hashedPassword = await bcrypt.hash(value.password, salt);
 
 		user.password = hashedPassword;
 		await userRepository.updateUser(resetToken.eid, {
@@ -56,24 +67,3 @@ exports.forgot = async (req, res) => {
 		res.status(500).json(error.message);
 	}
 };
-
-async function generateToken(email) {
-	try {
-		const user = await userRepository.getUserByEmail(email);
-		if (!user) {
-			throw new Error('User not found.');
-		}
-
-		const token = crypto.randomBytes(32).toString('hex');
-
-		const expiresAt = moment().add(1, 'hour');
-
-		await ResetTokenRepository.create(token, expiresAt, user.eid);
-
-		await forgotMail(email, token);
-
-		return true;
-	} catch (error) {
-		throw error;
-	}
-}
