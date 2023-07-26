@@ -16,8 +16,8 @@ exports.postCreate = async (req, res) => {
 	}
 
 	try {
-		await DepartmentRepository.create(value);
-		return res.status(200).json('Department successfully created!');
+		const department = await DepartmentRepository.create(value);
+		return res.status(200).json(department);
 	} catch (err) {
 		return res.status(500).json({ err });
 	}

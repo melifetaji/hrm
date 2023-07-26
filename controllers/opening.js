@@ -16,8 +16,8 @@ exports.postCreate = async (req, res) => {
 	}
 
 	try {
-		await openingRepository.create(value);
-		return res.status(200).json('Opening successfully created!');
+		const opening = await openingRepository.create(value);
+		return res.status(200).json(opening);
 	} catch (err) {
 		return res.status(500).json({ err });
 	}

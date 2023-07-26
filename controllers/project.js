@@ -20,8 +20,8 @@ exports.postCreate = async (req, res) => {
 	}
 
 	try {
-		await ProjectRepository.create(value);
-		return res.status(200).json('Project successfully created!');
+		const project = await ProjectRepository.create(value);
+		return res.status(200).json(project);
 	} catch (err) {
 		return res.status(500).json({ error: 'Failed to create project.' });
 	}
