@@ -38,9 +38,17 @@ app.use('/projects', projectRoutes);
 app.use('/leaves', leaveRoutes);
 app.use('/password', passwordResetRoutes);
 
-app.listen({ port: 3000 }, async () => {
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, async () => {
 	console.log('Server running on port 3000');
-	// await sequelize.sync({ force: true });
-	await sequelize.authenticate();
-	console.log('Database Connected!');
+	sequelize
+		.authenticate()
+		.then(() => {
+			console.log('Connection has been established successfully.');
+		})
+		.catch((err) => {
+			console.error('Unable to connect to the database:', err);
+		});
+	// await sequelize.authenticate();
 });
