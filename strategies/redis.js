@@ -13,8 +13,8 @@ const redisClient = redis.createClient({
 
 const connecting = async () => {
 	await redisClient.connect();
-}
-	connecting();
+};
+connecting();
 
 // Connect to Redis
 // Listen for the 'connect' event on the Redis client
@@ -36,7 +36,7 @@ module.exports = {
 		saveUninitialized: false,
 		store: new RedisStore({ client: redisClient }),
 		cookie: {
-			secure: false, // true for production (https)
+			secure: true,
 			httpOnly: true,
 			maxAge: 1000 * 60 * 60 * 24 * 7 * 4,
 		},
