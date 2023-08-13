@@ -1,5 +1,5 @@
 const express = require('express');
-const DepartmentRepository = require('../repositories/DepartmentRepository');
+const DepartmentRepository = require('../repositories/departmentRepository');
 const passport = require('passport');
 
 const {
