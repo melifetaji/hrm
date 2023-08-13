@@ -3,6 +3,7 @@ const passport = require('passport');
 const { redisClient, sessionMiddleware } = require('./strategies/redis');
 const logger = require('./utils/logger');
 const cronTokens = require('./utils/cron/tokens');
+const cookieParser = require('cookie-parser');
 
 require('dotenv').config();
 require('./strategies/local');
@@ -12,6 +13,7 @@ const { sequelize, User } = require('./models');
 const app = express();
 
 // Middleware
+app.use(cookieParser());
 app.use(express.json());
 app.use(sessionMiddleware);
 app.use(passport.initialize());

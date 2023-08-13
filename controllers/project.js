@@ -1,5 +1,5 @@
 const express = require('express');
-const ProjectRepository = require('../repositories/ProjectRepository');
+const ProjectRepository = require('../repositories/projectRepository');
 const passport = require('passport');
 
 const {
