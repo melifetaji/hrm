@@ -11,6 +11,14 @@ const generateRandomFileName = require('../utils/random-name');
 exports.postCreate = async (req, res) => {
 	const openingId = req.query.id;
 
+	if (req.files.cv.size > 10 * 1024 * 1024) {
+		return res.status(413).send('File size exceeds 10MB');
+	}
+
+	if (req.files.cv.mimetype !== 'application/pdf') {
+		return res.status(413).send('Only PDF is allowed');
+	}
+
 	let data = req.body;
 	let cv = req.files.cv;
 
