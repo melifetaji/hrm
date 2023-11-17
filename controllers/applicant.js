@@ -28,14 +28,6 @@ exports.postCreate = async (req, res) => {
 
 	let uploadPath = path.join(__dirname, '..', '/cv-uploads/') + randomName;
 
-	cv.mv(uploadPath, function (err) {
-		if (err) {
-			throw new Error(err);
-		} else {
-			console.log('File uploaded successfully');
-		}
-	});
-
 	const { error, value } = applySchema.validate(data);
 
 	if (error) {
@@ -48,6 +40,13 @@ exports.postCreate = async (req, res) => {
 			application.dataValues.id,
 			openingId
 		);
+		cv.mv(uploadPath, function (err) {
+			if (err) {
+				throw new Error(err);
+			} else {
+				console.log('File uploaded successfully');
+			}
+		});
 		await applicantMail();
 		return res.status(200).json(application);
 	} catch (err) {

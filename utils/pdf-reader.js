@@ -11,6 +11,4 @@ async function parsePdf(filePath) {
 	}
 }
 
-module.exports = {
-	parsePdf,
-};
+module.exports = parsePdf;
