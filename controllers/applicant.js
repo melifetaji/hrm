@@ -6,18 +6,23 @@ const ApplicantRepository = require('../repositories/applyRepository');
 const OpeningRepository = require('../repositories/openingRepository');
 const { applySchema } = require('../validators/applyValidator');
 const applicantMail = require('../utils/email/applicant');
+const generateRandomFileName = require('../utils/random-name');
 
 exports.postCreate = async (req, res) => {
 	const openingId = req.query.id;
-	let data = req.body;
-	data.cv = req.files.cv.name;
 
+	let data = req.body;
 	let cv = req.files.cv;
-	let uploadPath = path.join(__dirname, '..', '/cv-uploads/') + cv.name;
+
+	const randomName = generateRandomFileName(cv.name);
+
+	data.cv = randomName;
+
+	let uploadPath = path.join(__dirname, '..', '/cv-uploads/') + randomName;
 
 	cv.mv(uploadPath, function (err) {
 		if (err) {
-			console.log(err);
+			throw new Error(err);
 		} else {
 			console.log('File uploaded successfully');
 		}
