@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 const ApplicantRepository = require('../repositories/applyRepository');
@@ -9,6 +10,18 @@ const applicantMail = require('../utils/email/applicant');
 exports.postCreate = async (req, res) => {
 	const openingId = req.query.id;
 	let data = req.body;
+	data.cv = req.files.cv.name;
+
+	let cv = req.files.cv;
+	let uploadPath = path.join(__dirname, '..', '/cv-uploads/') + cv.name;
+
+	cv.mv(uploadPath, function (err) {
+		if (err) {
+			console.log(err);
+		} else {
+			console.log('File uploaded successfully');
+		}
+	});
 
 	const { error, value } = applySchema.validate(data);
 

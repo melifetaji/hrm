@@ -7,7 +7,7 @@ const applySchema = Joi.object({
 	experience: Joi.number().required(),
 	email: Joi.string().email().required(),
 	message: Joi.string().min(0).max(500),
-	cv: Joi.string().required(),
+	cv: Joi.binary().required(),
 });
 
 module.exports = { applySchema };

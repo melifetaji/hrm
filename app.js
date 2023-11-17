@@ -3,6 +3,7 @@ const passport = require('passport');
 const { redisClient, sessionMiddleware } = require('./strategies/redis');
 const logger = require('./utils/logger');
 const cronTokens = require('./utils/cron/tokens');
+const fileUpload = require('express-fileupload');
 
 require('dotenv').config();
 require('./strategies/local');
@@ -18,6 +19,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.disable('x-powered-by');
 app.use(logger);
+app.use(fileUpload());
 
 // Routes
 const userRoutes = require('./routes/employee');
