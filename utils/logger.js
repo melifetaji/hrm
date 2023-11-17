@@ -12,7 +12,7 @@ const colorizedLogFormat = (tokens, req, res) => {
 	} else if (status >= 200 && status < 300) {
 		bgColor = chalk.bgGreen;
 	} else {
-		bgColor = chalk.bgWhiteBright; // Default background color for other status codes
+		bgColor = chalk.bgWhiteBright;
 	}
 
 	return [

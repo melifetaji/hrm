@@ -3,6 +3,7 @@ const passport = require('passport');
 const { redisClient, sessionMiddleware } = require('./strategies/redis');
 const logger = require('./utils/logger');
 const cronTokens = require('./utils/cron/tokens');
+const fileUpload = require('express-fileupload');
 const cookieParser = require('cookie-parser');
 
 require('dotenv').config();
@@ -20,6 +21,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.disable('x-powered-by');
 app.use(logger);
+app.use(fileUpload());
 
 // Routes
 const userRoutes = require('./routes/employee');
@@ -52,5 +54,4 @@ app.listen(PORT, async () => {
 		.catch((err) => {
 			console.error('Unable to connect to the database:', err);
 		});
-	// await sequelize.authenticate();
 });

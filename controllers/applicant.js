@@ -1,14 +1,32 @@
 const express = require('express');
+const path = require('path');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 const ApplicantRepository = require('../repositories/applyRepository');
 const OpeningRepository = require('../repositories/openingRepository');
 const { applySchema } = require('../validators/applyValidator');
 const applicantMail = require('../utils/email/applicant');
+const generateRandomFileName = require('../utils/name-generator');
 
 exports.postCreate = async (req, res) => {
 	const openingId = req.query.id;
+
+	if (req.files.cv.size > 10 * 1024 * 1024) {
+		return res.status(413).send('File size exceeds 10MB');
+	}
+
+	if (req.files.cv.mimetype !== 'application/pdf') {
+		return res.status(413).send('Only PDF is allowed');
+	}
+
 	let data = req.body;
+	let cv = req.files.cv;
+
+	const randomName = generateRandomFileName(cv.name);
+
+	data.cv = randomName;
+
+	let uploadPath = path.join(__dirname, '..', '/cv-uploads/') + randomName;
 
 	const { error, value } = applySchema.validate(data);
 
@@ -22,6 +40,13 @@ exports.postCreate = async (req, res) => {
 			application.dataValues.id,
 			openingId
 		);
+		cv.mv(uploadPath, function (err) {
+			if (err) {
+				throw new Error(err);
+			} else {
+				console.log('File uploaded successfully');
+			}
+		});
 		await applicantMail();
 		return res.status(200).json(application);
 	} catch (err) {
