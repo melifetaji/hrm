@@ -6,7 +6,7 @@ const ApplicantRepository = require('../repositories/applyRepository');
 const OpeningRepository = require('../repositories/openingRepository');
 const { applySchema } = require('../validators/applyValidator');
 const applicantMail = require('../utils/email/applicant');
-const generateRandomFileName = require('../utils/random-name');
+const generateRandomFileName = require('../utils/name-generator');
 
 exports.postCreate = async (req, res) => {
 	const openingId = req.query.id;

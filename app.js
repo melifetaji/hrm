@@ -52,5 +52,4 @@ app.listen(PORT, async () => {
 		.catch((err) => {
 			console.error('Unable to connect to the database:', err);
 		});
-	// await sequelize.authenticate();
 });
