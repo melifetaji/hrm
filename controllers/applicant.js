@@ -7,6 +7,7 @@ const OpeningRepository = require('../repositories/openingRepository');
 const { applySchema } = require('../validators/applyValidator');
 const applicantMail = require('../utils/email/applicant');
 const generateRandomFileName = require('../utils/name-generator');
+const evaluate = require('../utils/ai-evaluation');
 
 exports.postCreate = async (req, res) => {
 	const openingId = req.query.id;
@@ -47,8 +48,12 @@ exports.postCreate = async (req, res) => {
 				console.log('File uploaded successfully');
 			}
 		});
+		res.status(200).json(application);
 		await applicantMail();
-		return res.status(200).json(application);
+
+		const cvData = await evaluate(application.dataValues.id, openingId);
+
+		console.log(cvData);
 	} catch (err) {
 		return res.status(500).json(err.message);
 	}

@@ -18,9 +18,8 @@ async function evaluate(applicantId, openingId) {
 	const fileName = path.join(__dirname, '../cv-uploads', applicantData.cv);
 
 	const cvData = await parsePdf(fileName);
-	console.log(cvData);
 
-	console.log(jobDescription);
+	return cvData;
 
 	// const completion = await openai.chat.completions.create({
 	// 	messages: [{ role: 'system', content: 'You are a helpful assistant.' }],

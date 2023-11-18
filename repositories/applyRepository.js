@@ -1,5 +1,6 @@
 const Applicant = require('../models').applicant;
 const ApplicantOpenings = require('../models').applicantOpening;
+const ApplicantAI = require('../models').ApplicantAI;
 const Opening = require('../models').opening;
 
 class ApplicantRepository {
@@ -45,7 +46,13 @@ class ApplicantRepository {
 			throw new Error('Error creating applicant opening');
 		}
 	}
-
+	async createApplicantAI(data) {
+		try {
+			return await ApplicantAI.create(data);
+		} catch (error) {
+			throw new Error('Error creating AI evaluation');
+		}
+	}
 	async getApplicantsByOpening(openingId) {
 		try {
 			const applicants = await Applicant.findAll({
