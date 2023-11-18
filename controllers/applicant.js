@@ -8,6 +8,12 @@ const { applySchema } = require('../validators/applyValidator');
 const applicantMail = require('../utils/email/applicant');
 const generateRandomFileName = require('../utils/name-generator');
 const evaluate = require('../utils/ai-evaluation');
+const applicantAI = require('../models/').applicantAI;
+
+exports.getRatings = async (req, res) => {
+	const ratings = await applicantAI.findAll();
+	return res.send(ratings);
+};
 
 exports.postCreate = async (req, res) => {
 	const openingId = req.query.id;
@@ -48,12 +54,20 @@ exports.postCreate = async (req, res) => {
 				console.log('File uploaded successfully');
 			}
 		});
+
 		res.status(200).json(application);
+
 		await applicantMail();
-
-		const cvData = await evaluate(application.dataValues.id, openingId);
-
-		console.log(cvData);
+		const { match, rating } = await evaluate(
+			application.dataValues.id,
+			openingId
+		);
+		await ApplicantRepository.createApplicantAI(
+			match,
+			rating,
+			application.dataValues.id
+		);
+		return;
 	} catch (err) {
 		return res.status(500).json(err.message);
 	}

@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
 			this.belongsToMany(models.opening, {
 				through: 'applicantOpening',
 			});
-			this.hasOne(models.applicantAI, { foreignKey: 'aiid' });
+			this.hasOne(models.applicantAI, { foreignKey: 'applicantId' });
 		}
 	}
 	applicant.init(
