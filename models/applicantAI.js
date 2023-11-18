@@ -8,12 +8,12 @@ module.exports = (sequelize, DataTypes) => {
 		 * The `models/index` file will call this method automatically.
 		 */
 		static associate(models) {
-			this.belongsTo(models.applicant, { foreignKey: 'aiid' });
+			this.belongsTo(models.applicant, { foreignKey: 'applicantId' });
 		}
 	}
 	applicantAI.init(
 		{
-			id: {
+			aid: {
 				type: DataTypes.UUID,
 				defaultValue: DataTypes.UUIDV4,
 				primaryKey: true,

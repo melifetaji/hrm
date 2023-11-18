@@ -1,16 +1,9 @@
 const Applicant = require('../models').applicant;
 const ApplicantOpenings = require('../models').applicantOpening;
+const ApplicantAI = require('../models').applicantAI;
 const Opening = require('../models').opening;
 
 class ApplicantRepository {
-	async getAll() {
-		try {
-			return await Applicant.findAll();
-		} catch (error) {
-			throw new Error('Error retrieving applicants');
-		}
-	}
-
 	async getById(id) {
 		try {
 			return await Applicant.findByPk(id);
@@ -45,7 +38,18 @@ class ApplicantRepository {
 			throw new Error('Error creating applicant opening');
 		}
 	}
-
+	async createApplicantAI(match, rating, id) {
+		try {
+			const ai = await ApplicantAI.create({
+				match,
+				rating,
+				applicantId: id,
+			});
+			return ai;
+		} catch (error) {
+			throw new Error(error);
+		}
+	}
 	async getApplicantsByOpening(openingId) {
 		try {
 			const applicants = await Applicant.findAll({
@@ -64,6 +68,13 @@ class ApplicantRepository {
 			return applicants;
 		} catch (error) {
 			throw new Error('Error retrieving applicants by opening');
+		}
+	}
+	async getAll() {
+		try {
+			return await Applicant.findAll({ include: { model: ApplicantAI } });
+		} catch (error) {
+			throw new Error('Error retrieving applicants');
 		}
 	}
 }
