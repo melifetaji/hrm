@@ -45,7 +45,7 @@ app.use('/password', passwordResetRoutes);
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, async () => {
-	console.log('Server running on port 3000');
+	console.log('Server is running on port 3000');
 	sequelize
 		.authenticate()
 		.then(() => {
